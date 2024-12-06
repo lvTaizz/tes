@@ -21,6 +21,23 @@ game.StarterGui:SetCore("SendNotification", {
     Duration = 2,
 })
 
+local SettingsGameData = {}
+
+xpcall(function()
+	if not isfolder("Happy Cat Hub scripts/ID/"..game.GameId) then
+		if syn then
+			makefolder("Happy Cat Hub scripts/ID/"..game.GameId)
+			writefile("Happy Cat Hub scripts/ID/"..game.GameId.."/"..game.Players.LocalPlayer.Name..".lua", game:GetService("HttpService"):JSONEncode(SettingsGameData));
+		else
+			makefolder("Happy Cat Hub scripts")
+			makefolder("Happy Cat Hub scripts/ID")
+			makefolder("Happy Cat Hub scripts/ID/"..game.GameId)
+			writefile("Happy Cat Hub scripts/ID/"..game.GameId.."/"..game.Players.LocalPlayer.Name..".lua", game:GetService("HttpService"):JSONEncode(SettingsGameData));
+		end
+	end
+	SettingsGameData = game:GetService("HttpService"):JSONDecode(readfile("Happy Cat Hub scripts/ID/"..game.GameId.."/"..game.Players.LocalPlayer.Name..".lua"));
+end,function()
+end)
 
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
@@ -1158,7 +1175,7 @@ local AttackAnim = Instance.new("Animation")
 local AttackCoolDown = 0
 local cooldowntickFire = 0
 local MaxFire = 1000
-local FireCooldown = 0.015
+local FireCooldown = 0.009
 local FireL = 0
 local Fast_Attack = true
 local bladehit = {}
@@ -1296,7 +1313,7 @@ local function ChangeModeFastAttack(SelectFastAttackMode)
     if SelectFastAttackMode == "Safe Attack" then
         FireCooldown = 0.8
     elseif SelectFastAttackMode == "Fast Attack" then
-        FireCooldown = 0.01
+        FireCooldown = 0.02
     elseif SelectFastAttackMode == "Taidz Fast" then
         FireCooldown = 0
     end
@@ -1340,12 +1357,12 @@ local DropdownTweenSpeed = Tabs.Setting:AddDropdown("DropdownTweenSpeed", {
             Title = "Tween Speed",
             Values = {"375","400","450","525"},
             Multi = false,
-            Default = 375,
+            Default = 400,
         })
         DropdownTweenSpeed:SetValue("TweenSpeed")
         DropdownTweenSpeed:OnChanged(function(Value)
             getgenv().TweenSpeed = Value
-       
+       Save()
  end)
 
 local ToggleBypassTP = Tabs.Setting:AddToggle("ToggleBypassTP", {Title = "Bypass Tp", Description = "", Default = true })
@@ -1476,7 +1493,7 @@ local ListF = {"Level Farm", "Farm Bones", "Farm Katakuri"}
 methodfarm:SetValue("Level Farm")
 methodfarm:OnChanged(function(Value)
     FMode = Value
-
+Save()
 end)
 
 function GetRandomTween(ck)
