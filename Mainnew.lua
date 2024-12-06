@@ -1293,12 +1293,12 @@ end)
 local SelectedFastAttackModes = {"Normal Attack", "Fast Attack", "Taidz Fast"}
 
 local function ChangeModeFastAttack(SelectFastAttackMode)
-    if SelectFastAttackMode == "Normal Attack" then
-        FireCooldown = 1
+    if SelectFastAttackMode == "Safe Attack" then
+        FireCooldown = 0.7
     elseif SelectFastAttackMode == "Fast Attack" then
         FireCooldown = 0.02
     elseif SelectFastAttackMode == "Taidz Fast" then
-        FireCooldown = 0.017
+        FireCooldown = 0
     end
 end
 
