@@ -17,7 +17,7 @@ local plr = game.Players.LocalPlayer
 
 game.StarterGui:SetCore("SendNotification", {
     Title = "Happy Cat Hub",
-    Text = "Loading!!",
+    Text = "Loading!",
     Duration = 2,
 })
 
@@ -1158,7 +1158,7 @@ local AttackAnim = Instance.new("Animation")
 local AttackCoolDown = 0
 local cooldowntickFire = 0
 local MaxFire = 1000
-local FireCooldown = 0.04
+local FireCooldown = 0.015
 local FireL = 0
 local Fast_Attack = true
 local bladehit = {}
@@ -1294,9 +1294,9 @@ local SelectedFastAttackModes = {"Safe Attack", "Fast Attack", "Taidz Fast"}
 
 local function ChangeModeFastAttack(SelectFastAttackMode)
     if SelectFastAttackMode == "Safe Attack" then
-        FireCooldown = 0.8
+        FireCooldown = 1
     elseif SelectFastAttackMode == "Fast Attack" then
-        FireCooldown = 0.02
+        FireCooldown = 0.8
     elseif SelectFastAttackMode == "Taidz Fast" then
         FireCooldown = 0.015
     end
