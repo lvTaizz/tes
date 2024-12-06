@@ -1298,7 +1298,7 @@ local function ChangeModeFastAttack(SelectFastAttackMode)
     elseif SelectFastAttackMode == "Fast Attack" then
         FireCooldown = 0.02
     elseif SelectFastAttackMode == "Taidz Fast" then
-        FireCooldown = 0.0001
+        FireCooldown = 0
     end
 end
 
@@ -1338,9 +1338,9 @@ end)
 
 local DropdownTweenSpeed = Tabs.Setting:AddDropdown("DropdownTweenSpeed", {
             Title = "Tween Speed",
-            Values = {"400","450","525","550","700"},
+            Values = {"370","400","450","550","700"},
             Multi = false,
-            Default = 400,
+            Default = 370,
         })
         DropdownTweenSpeed:SetValue("TweenSpeed")
         DropdownTweenSpeed:OnChanged(function(Value)
