@@ -1158,7 +1158,7 @@ local AttackAnim = Instance.new("Animation")
 local AttackCoolDown = 0
 local cooldowntickFire = 0
 local MaxFire = 1000
-local FireCooldown = 0.06
+local FireCooldown = 0.02
 local FireL = 0
 local Fast_Attack = true
 local bladehit = {}
@@ -1294,11 +1294,11 @@ local SelectedFastAttackModes = {"Normal Attack", "Fast Attack", "Taidz Fast"}
 
 local function ChangeModeFastAttack(SelectFastAttackMode)
     if SelectFastAttackMode == "Normal Attack" then
-        FireCooldown = 0.08
+        FireCooldown = 0.05
     elseif SelectFastAttackMode == "Fast Attack" then
-        FireCooldown = 0.06
+        FireCooldown = 0.02
     elseif SelectFastAttackMode == "Taidz Fast" then
-        FireCooldown = 0.015
+        FireCooldown = 0.017
     end
 end
 
