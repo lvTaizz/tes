@@ -21,23 +21,6 @@ game.StarterGui:SetCore("SendNotification", {
     Duration = 2,
 })
 
-local SettingsGameData = {}
-
-xpcall(function()
-	if not isfolder("Happy Cat Hub scripts/ID/"..game.GameId) then
-		if syn then
-			makefolder("Happy Cat Hub scripts/ID/"..game.GameId)
-			writefile("Happy Cat Hub scripts/ID/"..game.GameId.."/"..game.Players.LocalPlayer.Name..".lua", game:GetService("HttpService"):JSONEncode(SettingsGameData));
-		else
-			makefolder("Happy Cat Hub scripts")
-			makefolder("Happy Cat Hub scripts/ID")
-			makefolder("Happy Cat Hub scripts/ID/"..game.GameId)
-			writefile("Happy Cat Hub scripts/ID/"..game.GameId.."/"..game.Players.LocalPlayer.Name..".lua", game:GetService("HttpService"):JSONEncode(SettingsGameData));
-		end
-	end
-	SettingsGameData = game:GetService("HttpService"):JSONDecode(readfile("Happy Cat Hub scripts/ID/"..game.GameId.."/"..game.Players.LocalPlayer.Name..".lua"));
-end,function()
-end)
 
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
@@ -1362,7 +1345,7 @@ local DropdownTweenSpeed = Tabs.Setting:AddDropdown("DropdownTweenSpeed", {
         DropdownTweenSpeed:SetValue("TweenSpeed")
         DropdownTweenSpeed:OnChanged(function(Value)
             getgenv().TweenSpeed = Value
-       Save()
+       
  end)
 
 local ToggleBypassTP = Tabs.Setting:AddToggle("ToggleBypassTP", {Title = "Bypass Tp", Description = "", Default = true })
@@ -1493,7 +1476,7 @@ local ListF = {"Level Farm", "Farm Bones", "Farm Katakuri"}
 methodfarm:SetValue("Level Farm")
 methodfarm:OnChanged(function(Value)
     FMode = Value
-Save()
+
 end)
 
 function GetRandomTween(ck)
