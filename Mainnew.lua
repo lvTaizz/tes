@@ -1162,7 +1162,7 @@ local FireCooldown = 0
 local FireL = 0
 local Fast_Attack = true
 local bladehit = {}
-local ClickNoCooldown = false -- Định nghĩa biến thiếu
+local ClickNoCooldown = true -- Định nghĩa biến thiếu
 local fask = { -- Định nghĩa bảng thiếu
     delay = task.delay,
     spawn = task.spawn
@@ -1298,7 +1298,7 @@ local function ChangeModeFastAttack(SelectFastAttackMode)
     elseif SelectFastAttackMode == "Fast Attack" then
         FireCooldown = 0.02
     elseif SelectFastAttackMode == "Taidz Fast" then
-        FireCooldown = 0.015
+        FireCooldown = 0.008
     end
 end
 
@@ -2343,12 +2343,6 @@ end)
         end
     })
     
-    game.StarterGui:SetCore("SendNotification", {
-Title = "Loading",
-Text = "plz wait",
-Duration = 3,
-})
-
 
     local Chips = {"Flame","Ice","Quake","Light","Dark","Spider","Rumble","Magma","Buddha","Sand","Phoenix","Dough"}
 
