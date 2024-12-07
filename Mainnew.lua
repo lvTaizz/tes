@@ -1288,6 +1288,34 @@ spawn(function()
         end
     end
 end)
+
+---check sv nếu quá tải thì dừng
+local function isServerOverloaded()
+    local stats = game:GetService("Stats"):FindFirstChild("PerformanceStats")
+    if stats then
+        local ping = stats:FindFirstChild("Ping")
+        local memory = stats:FindFirstChild("Memory")
+        if ping and ping.Value > 200 or memory and memory.Value > 1024 then
+            return true
+        end
+    end
+    return false
+end
+
+spawn(function()
+    while game:GetService("RunService").Stepped:Wait() do
+        if isServerOverloaded() then
+            task.wait(3) -- Nếu server quá tải, dừng 3 giây
+        else
+            local ac = CombatFrameworkR.activeController
+            if ac and ac.equipped and not CheckStun() then
+                if Fast_Attack then
+                    pcall(AttackFunction, 1)
+                end
+            end
+        end
+    end
+end)
  
  local SelectFastAttackMode = "Taidz Fast"
 local SelectedFastAttackModes = {"Safe Attack", "Fast Attack", "Taidz Fast"}
