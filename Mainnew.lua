@@ -1296,9 +1296,9 @@ local function ChangeModeFastAttack(SelectFastAttackMode)
     if SelectFastAttackMode == "Safe Attack" then
         FireCooldown = 0.02
     elseif SelectFastAttackMode == "Fast Attack" then
-        FireCooldown = 0.0015
-    elseif SelectFastAttackMode == "Taidz Fast" then
         FireCooldown = 0
+    elseif SelectFastAttackMode == "Taidz Fast" then
+        FireCooldown = 0.0000001
     end
 end
 
