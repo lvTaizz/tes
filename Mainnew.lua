@@ -1168,23 +1168,6 @@ local fask = { -- Định nghĩa bảng thiếu
     spawn = task.spawn
 }
 
--- Hàm tính toán Damage Aura
-local DamageAuraRadius = 50  -- Đặt bán kính cho Damage Aura (có thể điều chỉnh)
-local function ApplyDamageAura()
-    local Client = game.Players.LocalPlayer
-    local Enemies = game:GetService("Workspace").Enemies:GetChildren()
-
-    -- Lặp qua các kẻ thù trong phạm vi Damage Aura
-    for _, v in pairs(Enemies) do
-        local Human = v:FindFirstChildOfClass("Humanoid")
-        if Human and Human.RootPart and Human.Health > 0 and Client:DistanceFromCharacter(Human.RootPart.Position) < DamageAuraRadius then
-            -- Tự động gây sát thương cho kẻ thù (không có giá trị damage cố định)
-            RigEven:FireServer("hit", {Human.RootPart}, 2, "")
-        end
-    end
-end
-
--- Hàm bọc Animation Attack
 RL.wrapAttackAnimationAsync = function(a, b, c, d, func)
     if not NoAttackAnimation then
         return RL.wrapAttackAnimationAsync(a, b, c, 60, func)
@@ -1210,7 +1193,6 @@ RL.wrapAttackAnimationAsync = function(a, b, c, d, func)
     pcall(func, Hits)
 end
 
--- Hàm lấy tất cả các mục tiêu trong phạm vi
 local function getAllBladeHits(Sizes)
     local Hits = {}
     local Client = game.Players.LocalPlayer
@@ -1287,9 +1269,6 @@ local function AttackFunction(typef)
             fask.delay(0.01, function()
                 StartP:Stop()
             end)
-
-            -- Gọi hàm Damage Aura khi tấn công
-            ApplyDamageAura()  -- Tự động gây sát thương cho các mục tiêu trong phạm vi
         end
     end
 end
@@ -1342,13 +1321,7 @@ local FASTAT = Tabs.Setting:AddToggle("Fast_Attack", {Title = "Fast Attack", Def
 FASTAT:OnChanged(function(value)
     Fast_Attack = value
     DmgAttack.Enabled = not value  -- Bật/Tắt DmgAttack dựa trên giá trị Fast_Attack
-
-    -- Nếu DamageAura là một đối tượng có thể bật/tắt, ta điều khiển như sau
-    if value then
-        ApplyDamageAura()  -- Gọi hàm ApplyDamageAura để tự động gây sát thương cho các mục tiêu trong phạm vi
-    else
-        -- Nếu cần tắt Damage Aura, có thể thêm logic ở đây
-        -- Ví dụ: Tắt hiệu ứng hoặc hủy các hành động gây sát thương
+    DamageAura = value
     end
 end)
 
@@ -3895,27 +3868,28 @@ Bat_V3:OnChanged(function(Value)
 end)
 Options.Bat_V3:SetValue(false)
 
-local Bat_V4 = Tabs.NguoiChoi:AddToggle("Bat_V4", {Title = "Auto Use Race V4", Description = "", Default = true })
+local Bat_V4 = Tabs.NguoiChoi:AddToggle("Bat_V4", {Title = "Auto Use Race V4", Description = "", Default = false })
+
 Bat_V4:OnChanged(function(Value)
     Enable_RaceV4 = Value
-    task.spawn(function()
-        while Enable_RaceV4 do
-            wait()
-            -- Kiểm tra xem có thể sử dụng Race V4 không (ví dụ, bằng cách tìm kiếm một đối tượng hoặc hàm)
-            local OpenV4Race = inmyselfss("Awakening") -- Kiểm tra có đối tượng hay trạng thái Race V4 không
-            if OpenV4Race then
-                -- Nếu có, gọi RemoteFunction để kích hoạt Race V4
-                if OpenV4Race.RemoteFunction then
-                    OpenV4Race.RemoteFunction:InvokeServer(true)
+    if Enable_RaceV4 then
+        task.spawn(function()
+            while Enable_RaceV4 do
+                wait(1)  -- Thêm độ trễ tránh quá tải CPU
+                local OpenV4Race = game.ReplicatedStorage:FindFirstChild("Awakening")
+                if OpenV4Race and OpenV4Race:FindFirstChild("RemoteFunction") then
+                    pcall(function()
+                        OpenV4Race.RemoteFunction:InvokeServer(true)  -- Kích hoạt Race V4
+                    end)
                 end
             end
-        end
-    end)
+        end)
+    end
 end)
 
--- Thiết lập giá trị mặc định của Bat_V4 (nếu cần)
-Bat_V4:SetValue(true)  -- Đặt giá trị toggle mặc định là false (tắt)----pvp
- 
+Options.Bat_V4:SetValue(true)
+---pvp
+
 local StoreFr = Tabs.Fruit:AddToggle("StoreFr", {Title = "Auto Store Fruit", Description = "", Default = false })
 StoreFr:OnChanged(function(Value)
     _G.AutoStoreFruit = Value
