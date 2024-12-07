@@ -1149,7 +1149,7 @@ end
 		v930_args:Stop()
 	end)
 
-    local NoAttackAnimation = true
+local NoAttackAnimation = true
 local DmgAttack = game:GetService("ReplicatedStorage").Assets.GUI:WaitForChild("DamageCounter")
 local PC = require(game.Players.LocalPlayer.PlayerScripts.CombatFramework.Particle)
 local RL = require(game:GetService("ReplicatedStorage").CombatFramework.RigLib)
@@ -1167,19 +1167,6 @@ local fask = { -- Định nghĩa bảng thiếu
     delay = task.delay,
     spawn = task.spawn
 }
-
--- Hàm kiểm tra trạng thái quá tải của game
-local function isGameReady()
-    local stats = game:GetService("Stats"):FindFirstChild("PerformanceStats")
-    if stats then
-        local ping = stats:FindFirstChild("Ping")
-        local memory = stats:FindFirstChild("Memory")
-        if ping and ping.Value > 200 or memory and memory.Value > 1024 then
-            return false
-        end
-    end
-    return true
-end
 
 RL.wrapAttackAnimationAsync = function(a, b, c, d, func)
     if not NoAttackAnimation then
@@ -1293,19 +1280,14 @@ end
 
 spawn(function()
     while game:GetService("RunService").Stepped:Wait() do
-        if not isGameReady() then
-            task.wait(1) -- Chờ game load
-        else
-            local ac = CombatFrameworkR.activeController
-            if ac and ac.equipped and not CheckStun() then
-                if Fast_Attack then
-                    pcall(AttackFunction, 1)
-                end
+        local ac = CombatFrameworkR.activeController
+        if ac and ac.equipped and not CheckStun() then
+            if Fast_Attack then
+                pcall(AttackFunction, 1)
             end
         end
     end
 end)
-
  
  local SelectFastAttackMode = "Taidz Fast"
 local SelectedFastAttackModes = {"Safe Attack", "Fast Attack", "Taidz Fast"}
