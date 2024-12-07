@@ -1383,7 +1383,7 @@ ToggleBypassTP:OnChanged(function(Value)
     BypassTP = Value
     
 end)
-Options.ToggleBypassTP:SetValue(false)
+Options.ToggleBypassTP:SetValue(true)
 
 local SliderPosX = Tabs.Setting:AddSlider("SliderPosX", {
     Title = "Pos X",
@@ -3914,7 +3914,7 @@ Bat_V4:OnChanged(function(Value)
 end)
 
 -- Thiết lập giá trị mặc định của Bat_V4 (nếu cần)
-Bat_V4:SetValue(false)  -- Đặt giá trị toggle mặc định là false (tắt)----pvp
+Bat_V4:SetValue(true)  -- Đặt giá trị toggle mặc định là false (tắt)----pvp
  
 local StoreFr = Tabs.Fruit:AddToggle("StoreFr", {Title = "Auto Store Fruit", Description = "", Default = false })
 StoreFr:OnChanged(function(Value)
