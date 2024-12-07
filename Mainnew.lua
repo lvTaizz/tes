@@ -1168,6 +1168,23 @@ local fask = { -- Định nghĩa bảng thiếu
     spawn = task.spawn
 }
 
+-- Hàm tính toán Damage Aura
+local DamageAuraRadius = 60  -- Đặt bán kính cho Damage Aura (có thể điều chỉnh)
+local function ApplyDamageAura()
+    local Client = game.Players.LocalPlayer
+    local Enemies = game:GetService("Workspace").Enemies:GetChildren()
+
+    -- Lặp qua các kẻ thù trong phạm vi Damage Aura
+    for _, v in pairs(Enemies) do
+        local Human = v:FindFirstChildOfClass("Humanoid")
+        if Human and Human.RootPart and Human.Health > 0 and Client:DistanceFromCharacter(Human.RootPart.Position) < DamageAuraRadius then
+            -- Tự động gây sát thương cho kẻ thù (không có giá trị damage cố định)
+            RigEven:FireServer("hit", {Human.RootPart}, 2, "")
+        end
+    end
+end
+
+-- Hàm bọc Animation Attack
 RL.wrapAttackAnimationAsync = function(a, b, c, d, func)
     if not NoAttackAnimation then
         return RL.wrapAttackAnimationAsync(a, b, c, 60, func)
@@ -1193,6 +1210,7 @@ RL.wrapAttackAnimationAsync = function(a, b, c, d, func)
     pcall(func, Hits)
 end
 
+-- Hàm lấy tất cả các mục tiêu trong phạm vi
 local function getAllBladeHits(Sizes)
     local Hits = {}
     local Client = game.Players.LocalPlayer
@@ -1269,6 +1287,9 @@ local function AttackFunction(typef)
             fask.delay(0.01, function()
                 StartP:Stop()
             end)
+
+            -- Gọi hàm Damage Aura khi tấn công
+            ApplyDamageAura()  -- Tự động gây sát thương cho các mục tiêu trong phạm vi
         end
     end
 end
