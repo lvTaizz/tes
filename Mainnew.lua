@@ -1149,7 +1149,7 @@ end
 		v930_args:Stop()
 	end)
 
-    local NoAttackAnimation = true
+local NoAttackAnimation = true
 local DmgAttack = game:GetService("ReplicatedStorage").Assets.GUI:WaitForChild("DamageCounter")
 local PC = require(game.Players.LocalPlayer.PlayerScripts.CombatFramework.Particle)
 local RL = require(game:GetService("ReplicatedStorage").CombatFramework.RigLib)
@@ -1288,8 +1288,8 @@ spawn(function()
         end
     end
 end)
- 
- local SelectFastAttackMode = "Taidz Fast"
+
+local SelectFastAttackMode = "Taidz Fast"
 local SelectedFastAttackModes = {"Safe Attack", "Fast Attack", "Taidz Fast"}
 
 local function ChangeModeFastAttack(SelectFastAttackMode)
@@ -1320,10 +1320,12 @@ end)
 local FASTAT = Tabs.Setting:AddToggle("Fast_Attack", {Title = "Fast Attack", Default = true})
 FASTAT:OnChanged(function(value)
     Fast_Attack = value
+    DmgAttack.Enabled = not value  -- Bật/Tắt DmgAttack dựa trên giá trị Fast_Attack
     DamageAura = value
-    DmgAttack.Enabled = not value
-
+ 
+    end
 end)
+
 
 local Mouse = game:GetService("Players").LocalPlayer:GetMouse()
 Mouse.Button1Down:Connect(function()
@@ -1335,12 +1337,14 @@ Mouse.Button1Down:Connect(function()
         end
     end
 end)
+ 
+ 
 
 local DropdownTweenSpeed = Tabs.Setting:AddDropdown("DropdownTweenSpeed", {
             Title = "Tween Speed",
-            Values = {"350","400","450","550","700","750","800"},
+            Values = {"350","400","450","550","700","725","800","1000"},
             Multi = false,
-            Default = 350,
+            Default = 400,
         })
         DropdownTweenSpeed:SetValue("TweenSpeed")
         DropdownTweenSpeed:OnChanged(function(Value)
@@ -1353,7 +1357,7 @@ ToggleBypassTP:OnChanged(function(Value)
     BypassTP = Value
     
 end)
-Options.ToggleBypassTP:SetValue(false)
+Options.ToggleBypassTP:SetValue(true)
 
 local SliderPosX = Tabs.Setting:AddSlider("SliderPosX", {
     Title = "Pos X",
@@ -1959,7 +1963,6 @@ spawn(function()
     end
     end
   end)
-    
 
   local ClientTime = Tabs.Status:AddParagraph({
     Title = "Client Time",
@@ -2855,6 +2858,40 @@ if game:GetService("Workspace").Enemies:FindFirstChild("rip_indra True Form") or
             KillMonster(v.Name, true, _G.RipIndraKill == false)
       until not _G.RipIndraKill or v.Humanoid.Health <= 0
     end
+  end
+end
+end
+end
+end)
+
+  local Auto_SoulReaper= Tabs.Stack:AddToggle("Auto_SoulReaper", {Title = "Auto Kill Soul Reaper", Description = "Sea 3 Function Only", Default = false })
+  Auto_SoulReaper:OnChanged(function(Value)
+    _G.AutoFarmBossHallow = Value
+    
+end)
+  Options.Auto_SoulReaper:SetValue(false)
+
+spawn(function()
+while wait() do
+if _G.Auto_StartRaidAutoFarmBossHallow then
+if game:GetService("Workspace").Enemies:FindFirstChild("Soul Reaper") then
+  for i,v in pairs(game:GetService("Workspace").Enemies:GetChildren()) do
+    if v.Name == "Soul Reaper" then
+      if v:FindFirstChild("Humanoid") and v:FindFirstChild("HumanoidRootPart") and v.Humanoid.Health > 0 then
+        repeat task.wait()
+            T.Text = ("Auto Farm: Killing Mob | " .. (v.Name))
+            NeedAttacking = true
+            AutoHaki()
+            EquipTool(SelectWeapon)
+            Tween(v.HumanoidRootPart.CFrame * CFrame.new(posX,posY,posZ))
+            KillMonster(v.Name, true, _G.AutoFarmBossHallow == false)
+        until not _G.AutoFarmBossHallow or not v.Parent or v.Humanoid.Health <= 0
+      end
+    end
+  end
+else
+  if game:GetService("ReplicatedStorage"):FindFirstChild("Soul Reaper") then
+    Tween(game:GetService("ReplicatedStorage"):FindFirstChild("Soul Reaper").HumanoidRootPart.CFrame * CFrame.new(5,10,2))
   end
 end
 end
@@ -3832,21 +3869,26 @@ Bat_V3:OnChanged(function(Value)
 end)
 Options.Bat_V3:SetValue(false)
 
-local Bat_V4 = Tabs.NguoiChoi:AddToggle("Bat_V4", {Title = "Auto Use Race V4", Description = "", Default = false })
+local Bat_V4 = Tabs.NguoiChoi:AddToggle("Bat_V4", {Title = "Auto Use Race V4", Description = "", Default = true })
 Bat_V4:OnChanged(function(Value)
     Enable_RaceV4 = Value
-	task.spawn(function()
-		while Enable_RaceV4 do wait()
-			local OpenV4Race = inmyselfss("Awakening")
-			if OpenV4Race then
-				OpenV4Race.RemoteFunction:InvokeServer(true)
-			
+    task.spawn(function()
+        while Enable_RaceV4 do
+            wait()
+            -- Kiểm tra xem có thể sử dụng Race V4 không (ví dụ, bằng cách tìm kiếm một đối tượng hoặc hàm)
+            local OpenV4Race = inmyselfss("Awakening") -- Kiểm tra có đối tượng hay trạng thái Race V4 không
+            if OpenV4Race then
+                -- Nếu có, gọi RemoteFunction để kích hoạt Race V4
+                if OpenV4Race.RemoteFunction then
+                    OpenV4Race.RemoteFunction:InvokeServer(true)
+                end
             end
-		end
-	end)
+        end
+    end)
 end)
-Options.Bat_V4:SetValue(false)
-----pvp
+
+-- Thiết lập giá trị mặc định của Bat_V4 (nếu cần)
+Bat_V4:SetValue(true)  -- Đặt giá trị toggle mặc định là false (tắt)----pvp
  
 local StoreFr = Tabs.Fruit:AddToggle("StoreFr", {Title = "Auto Store Fruit", Description = "", Default = false })
 StoreFr:OnChanged(function(Value)
