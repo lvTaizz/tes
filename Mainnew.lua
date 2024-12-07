@@ -1168,6 +1168,19 @@ local fask = { -- Định nghĩa bảng thiếu
     spawn = task.spawn
 }
 
+-- Hàm kiểm tra trạng thái quá tải của game
+local function isGameReady()
+    local stats = game:GetService("Stats"):FindFirstChild("PerformanceStats")
+    if stats then
+        local ping = stats:FindFirstChild("Ping")
+        local memory = stats:FindFirstChild("Memory")
+        if ping and ping.Value > 200 or memory and memory.Value > 1024 then
+            return false
+        end
+    end
+    return true
+end
+
 RL.wrapAttackAnimationAsync = function(a, b, c, d, func)
     if not NoAttackAnimation then
         return RL.wrapAttackAnimationAsync(a, b, c, 60, func)
@@ -1280,32 +1293,8 @@ end
 
 spawn(function()
     while game:GetService("RunService").Stepped:Wait() do
-        local ac = CombatFrameworkR.activeController
-        if ac and ac.equipped and not CheckStun() then
-            if Fast_Attack then
-                pcall(AttackFunction, 1)
-            end
-        end
-    end
-end)
-
----check sv nếu quá tải thì dừng
-local function isServerOverloaded()
-    local stats = game:GetService("Stats"):FindFirstChild("PerformanceStats")
-    if stats then
-        local ping = stats:FindFirstChild("Ping")
-        local memory = stats:FindFirstChild("Memory")
-        if ping and ping.Value > 200 or memory and memory.Value > 1024 then
-            return true
-        end
-    end
-    return false
-end
-
-spawn(function()
-    while game:GetService("RunService").Stepped:Wait() do
-        if isServerOverloaded() then
-            task.wait(1) -- Nếu server quá tải, dừng 3 giây
+        if not isGameReady() then
+            task.wait(1) -- Chờ game load
         else
             local ac = CombatFrameworkR.activeController
             if ac and ac.equipped and not CheckStun() then
@@ -1316,6 +1305,7 @@ spawn(function()
         end
     end
 end)
+
  
  local SelectFastAttackMode = "Taidz Fast"
 local SelectedFastAttackModes = {"Safe Attack", "Fast Attack", "Taidz Fast"}
@@ -1326,7 +1316,7 @@ local function ChangeModeFastAttack(SelectFastAttackMode)
     elseif SelectFastAttackMode == "Fast Attack" then
         FireCooldown = 0.0015
     elseif SelectFastAttackMode == "Taidz Fast" then
-        FireCooldown = 0.00000001
+        FireCooldown = 0
     end
 end
 
