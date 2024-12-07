@@ -68,7 +68,7 @@ TextLabel.AnchorPoint = Vector2.new(0.5, 0.5)
 TextLabel.Position = UDim2.new(0.5, 0, -0.025, 0)
 TextLabel.Size = UDim2.new(0, 200, 0, 50)
 TextLabel.Font = Enum.Font.FredokaOne
-TextLabel.Text = "discord.gg/"
+TextLabel.Text = "Fast atack top 1"
 TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
 TextLabel.TextSize = 20.00
 
@@ -3868,26 +3868,6 @@ Bat_V3:OnChanged(function(Value)
 end)
 Options.Bat_V3:SetValue(false)
 
-local Bat_V4 = Tabs.NguoiChoi:AddToggle("Bat_V4", {Title = "Auto Use Race V4", Description = "", Default = false })
-
-Bat_V4:OnChanged(function(Value)
-    Enable_RaceV4 = Value
-    if Enable_RaceV4 then
-        task.spawn(function()
-            while Enable_RaceV4 do
-                wait(1)  -- Thêm độ trễ tránh quá tải CPU
-                local OpenV4Race = game.ReplicatedStorage:FindFirstChild("Awakening")
-                if OpenV4Race and OpenV4Race:FindFirstChild("RemoteFunction") then
-                    pcall(function()
-                        OpenV4Race.RemoteFunction:InvokeServer(true)  -- Kích hoạt Race V4
-                    end)
-                end
-            end
-        end)
-    end
-end)
-
-Options.Bat_V4:SetValue(true)
 ---pvp
 
 local StoreFr = Tabs.Fruit:AddToggle("StoreFr", {Title = "Auto Store Fruit", Description = "", Default = false })
