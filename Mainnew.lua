@@ -1959,6 +1959,62 @@ spawn(function()
     end
     end
   end)
+  
+  if Sea1 then
+		tableBoss = {"The Gorilla King","Bobby","Yeti","Mob Leader","Vice Admiral","Warden","Chief Warden","Swan","Magma Admiral","Fishman Lord","Wysper","Thunder God","Cyborg","Saber Expert"}
+	elseif Sea2 then
+		tableBoss = {"Diamond","Jeremy","Fajita","Don Swan","Smoke Admiral","Cursed Captain","Darkbeard","Order","Awakened Ice Admiral","Tide Keeper"}
+	elseif Sea3 then
+		tableBoss = {"Stone","Island Empress","Kilo Admiral","Captain Elephant","Beautiful Pirate","rip_indra True Form","Longma","Soul Reaper","Cake Queen"}
+	end
+	local Dropdown = Tabs.Main:AddDropdown("Dropdown", {
+        Title = "Choose Boss",
+        Values = tableBoss,
+        Multi = false,
+        Default = _G.SelectBoss,
+    })
+    Dropdown:SetValue("")
+    Dropdown:OnChanged(function(Value)
+        _G.SelectBoss = Value
+        
+    end)
+    Toggle = Tabs.Main:AddToggle("MyToggle", {Title = "Start Kill Boss", Default = _G.AutoFarmBoss })
+    Toggle:OnChanged(function(Value)
+        _G.AutoFarmBoss = Value
+        
+    end)
+    spawn(function()
+        while wait() do
+            if _G.AutoFarmBoss then
+                pcall(function()
+                    if game:GetService("Workspace").Enemies:FindFirstChild(_G.SelectBoss) then
+                        for i,v in pairs(game:GetService("Workspace").Enemies:GetChildren()) do
+                            if v.Name == _G.SelectBoss then
+                                if v:FindFirstChild("Humanoid") and v:FindFirstChild("HumanoidRootPart") and v.Humanoid.Health > 0 then
+                                    repeat task.wait()
+                                    NeedAttacking = true
+                                        AutoHaki()
+                                        EquipWeapon(_G.SelectWeapon)
+                                        v.HumanoidRootPart.CanCollide = false
+                                        v.Humanoid.WalkSpeed = 0
+                                                                     
+                                        topos(v.HumanoidRootPart.CFrame * CFrame.new(PosX,PosY,PosZ))
+                                        sethiddenproperty(game:GetService("Players").LocalPlayer,"SimulationRadius",math.huge)
+                                    until not _G.AutoFarmBoss or not v.Parent or v.Humanoid.Health <= 0
+                                end
+                            end
+                        end
+                    else
+                    NeedAttacking = false
+                        if game:GetService("ReplicatedStorage"):FindFirstChild(_G.SelectBoss) then
+                            topos(game:GetService("ReplicatedStorage"):FindFirstChild(_G.SelectBoss).HumanoidRootPart.CFrame * CFrame.new(5,10,2))
+                        end
+                    end
+                end)
+            end
+        end
+    end)
+   
 
   local ClientTime = Tabs.Status:AddParagraph({
     Title = "Client Time",
@@ -2860,38 +2916,43 @@ end
 end
 end)
 
-  local Auto_SoulReaper= Tabs.Stack:AddToggle("Auto_SoulReaper", {Title = "Auto Kill Soul Reaper", Description = "Sea 3 Function Only", Default = false })
-  Auto_SoulReaper:OnChanged(function(Value)
-    _G.AutoFarmBossHallow = Value
-    
-end)
-  Options.Auto_SoulReaper:SetValue(false)
-
-spawn(function()
-while wait() do
-if _G.Auto_StartRaidAutoFarmBossHallow then
-if game:GetService("Workspace").Enemies:FindFirstChild("Soul Reaper") then
-  for i,v in pairs(game:GetService("Workspace").Enemies:GetChildren()) do
-    if v.Name == "Soul Reaper" then
-      if v:FindFirstChild("Humanoid") and v:FindFirstChild("HumanoidRootPart") and v.Humanoid.Health > 0 then
-        repeat task.wait()
-            T.Text = ("Auto Farm: Killing Mob | " .. (v.Name))
-            NeedAttacking = true
-            AutoHaki()
-            EquipTool(SelectWeapon)
-            Tween(v.HumanoidRootPart.CFrame * CFrame.new(posX,posY,posZ))
-            KillMonster(v.Name, true, _G.AutoFarmBossHallow == false)
-        until not _G.AutoFarmBossHallow or not v.Parent or v.Humanoid.Health <= 0
-      end
+Toggle = Tabs.Stack:AddToggle("MyToggle", {Title = "Auto Soul Reaper [ Hallow ]", Default = _G.AutoFarmBossHallow })
+    Toggle:OnChanged(function(Value)
+        _G.AutoFarmBossHallow = Value
+        saveSettings()
+    end)
+    spawn(function()
+    while wait() do
+        if _G.AutoFarmBossHallow then
+            pcall(function()
+                if game:GetService("Workspace").Enemies:FindFirstChild("Soul Reaper") then
+                    for i,v in pairs(game:GetService("Workspace").Enemies:GetChildren()) do
+                        if string.find(v.Name , "Soul Reaper") then
+                            repeat task.wait()
+                                NeedAttacking = true
+                                EquipWeapon(_G.SelectWeapon)
+                                AutoHaki()
+                                
+                                topos(v.HumanoidRootPart.CFrame*Pos)
+                                game:GetService("VirtualUser"):CaptureController()
+                                game:GetService("VirtualUser"):Button1Down(Vector2.new(1280, 670))
+                                v.HumanoidRootPart.Transparency = 1
+                                -- sethiddenproperty(game.Players.LocalPlayer,"SimulationRadius",math.huge)
+                            until v.Humanoid.Health <= 0 or _G.AutoFarmBossHallow == false
+                        end
+                    end
+                elseif game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Hallow Essence") or game:GetService("Players").LocalPlayer.Character:FindFirstChild("Hallow Essence") then
+                    repeat topos(CFrame.new(-8932.322265625, 146.83154296875, 6062.55078125)) wait() until (CFrame.new(-8932.322265625, 146.83154296875, 6062.55078125).Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude <= 8                        
+                    EquipWeapon("Hallow Essence")
+                else
+                    if game:GetService("ReplicatedStorage"):FindFirstChild("Soul Reaper") then
+                        topos(game:GetService("ReplicatedStorage"):FindFirstChild("Soul Reaper").HumanoidRootPart.CFrame * CFrame.new(2,20,2))
+                   
+                    end
+                end
+            end)
+        end
     end
-  end
-else
-  if game:GetService("ReplicatedStorage"):FindFirstChild("Soul Reaper") then
-    Tween(game:GetService("ReplicatedStorage"):FindFirstChild("Soul Reaper").HumanoidRootPart.CFrame * CFrame.new(5,10,2))
-  end
-end
-end
-end
 end)
 
   
