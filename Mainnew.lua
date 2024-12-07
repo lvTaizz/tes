@@ -1294,11 +1294,11 @@ local SelectedFastAttackModes = {"Safe Attack", "Fast Attack", "Taidz Fast"}
 
 local function ChangeModeFastAttack(SelectFastAttackMode)
     if SelectFastAttackMode == "Safe Attack" then
-        FireCooldown = 0.5
-    elseif SelectFastAttackMode == "Fast Attack" then
         FireCooldown = 0.02
+    elseif SelectFastAttackMode == "Fast Attack" then
+        FireCooldown = 0.0015
     elseif SelectFastAttackMode == "Taidz Fast" then
-        FireCooldown = 0.0000001
+        FireCooldown = 0.00000001
     end
 end
 
@@ -1338,7 +1338,7 @@ end)
 
 local DropdownTweenSpeed = Tabs.Setting:AddDropdown("DropdownTweenSpeed", {
             Title = "Tween Speed",
-            Values = {"350","400","450","550","700"},
+            Values = {"350","400","450","550","700","725","800"},
             Multi = false,
             Default = 350,
         })
