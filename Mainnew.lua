@@ -1959,62 +1959,7 @@ spawn(function()
     end
     end
   end)
-  
-  if Sea1 then
-		tableBoss = {"The Gorilla King","Bobby","Yeti","Mob Leader","Vice Admiral","Warden","Chief Warden","Swan","Magma Admiral","Fishman Lord","Wysper","Thunder God","Cyborg","Saber Expert"}
-	elseif Sea2 then
-		tableBoss = {"Diamond","Jeremy","Fajita","Don Swan","Smoke Admiral","Cursed Captain","Darkbeard","Order","Awakened Ice Admiral","Tide Keeper"}
-	elseif Sea3 then
-		tableBoss = {"Stone","Island Empress","Kilo Admiral","Captain Elephant","Beautiful Pirate","rip_indra True Form","Longma","Soul Reaper","Cake Queen"}
-	end
-	local Dropdown = Tabs.Main:AddDropdown("Dropdown", {
-        Title = "Choose Boss",
-        Values = tableBoss,
-        Multi = false,
-        Default = _G.SelectBoss,
-    })
-    Dropdown:SetValue("")
-    Dropdown:OnChanged(function(Value)
-        _G.SelectBoss = Value
-        
-    end)
-    Toggle = Tabs.Main:AddToggle("MyToggle", {Title = "Start Kill Boss", Default = _G.AutoFarmBoss })
-    Toggle:OnChanged(function(Value)
-        _G.AutoFarmBoss = Value
-        
-    end)
-    spawn(function()
-        while wait() do
-            if _G.AutoFarmBoss then
-                pcall(function()
-                    if game:GetService("Workspace").Enemies:FindFirstChild(_G.SelectBoss) then
-                        for i,v in pairs(game:GetService("Workspace").Enemies:GetChildren()) do
-                            if v.Name == _G.SelectBoss then
-                                if v:FindFirstChild("Humanoid") and v:FindFirstChild("HumanoidRootPart") and v.Humanoid.Health > 0 then
-                                    repeat task.wait()
-                                    NeedAttacking = true
-                                        AutoHaki()
-                                        EquipWeapon(_G.SelectWeapon)
-                                        v.HumanoidRootPart.CanCollide = false
-                                        v.Humanoid.WalkSpeed = 0
-                                                                     
-                                        topos(v.HumanoidRootPart.CFrame * CFrame.new(PosX,PosY,PosZ))
-                                        sethiddenproperty(game:GetService("Players").LocalPlayer,"SimulationRadius",math.huge)
-                                    until not _G.AutoFarmBoss or not v.Parent or v.Humanoid.Health <= 0
-                                end
-                            end
-                        end
-                    else
-                    NeedAttacking = false
-                        if game:GetService("ReplicatedStorage"):FindFirstChild(_G.SelectBoss) then
-                            topos(game:GetService("ReplicatedStorage"):FindFirstChild(_G.SelectBoss).HumanoidRootPart.CFrame * CFrame.new(5,10,2))
-                        end
-                    end
-                end)
-            end
-        end
-    end)
-   
+    
 
   local ClientTime = Tabs.Status:AddParagraph({
     Title = "Client Time",
