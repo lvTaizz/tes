@@ -28,7 +28,7 @@ local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.
 
 local Window = Fluent:CreateWindow({
     Title = "Happy Cat Hub",
-    SubTitle = "by taidz",
+    SubTitle = "Fast atack top 1.",
     TabWidth = 100,
     Size = UDim2.fromOffset(530, 350),
     Acrylic = false, -- The blur may be detectable, setting this to false disables blur entirely
@@ -68,7 +68,7 @@ TextLabel.AnchorPoint = Vector2.new(0.5, 0.5)
 TextLabel.Position = UDim2.new(0.5, 0, -0.025, 0)
 TextLabel.Size = UDim2.new(0, 200, 0, 50)
 TextLabel.Font = Enum.Font.FredokaOne
-TextLabel.Text = "Fast atack top 1"
+TextLabel.Text = "discord.gg/"
 TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
 TextLabel.TextSize = 20.00
 
@@ -3868,8 +3868,27 @@ Bat_V3:OnChanged(function(Value)
 end)
 Options.Bat_V3:SetValue(false)
 
----pvp
+local Bat_V4 = Tabs.NguoiChoi:AddToggle("Bat_V4", {Title = "Auto Use Race V4", Description = "", Default = true })
+Bat_V4:OnChanged(function(Value)
+    Enable_RaceV4 = Value
+    task.spawn(function()
+        while Enable_RaceV4 do
+            wait()
+            -- Kiểm tra xem có thể sử dụng Race V4 không (ví dụ, bằng cách tìm kiếm một đối tượng hoặc hàm)
+            local OpenV4Race = inmyselfss("Awakening") -- Kiểm tra có đối tượng hay trạng thái Race V4 không
+            if OpenV4Race then
+                -- Nếu có, gọi RemoteFunction để kích hoạt Race V4
+                if OpenV4Race.RemoteFunction then
+                    OpenV4Race.RemoteFunction:InvokeServer(true)
+                end
+            end
+        end
+    end)
+end)
 
+-- Thiết lập giá trị mặc định của Bat_V4 (nếu cần)
+Bat_V4:SetValue(true)  -- Đặt giá trị toggle mặc định là false (tắt)----pvp
+ 
 local StoreFr = Tabs.Fruit:AddToggle("StoreFr", {Title = "Auto Store Fruit", Description = "", Default = false })
 StoreFr:OnChanged(function(Value)
     _G.AutoStoreFruit = Value
