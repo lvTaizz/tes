@@ -28,7 +28,7 @@ local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.
 
 local Window = Fluent:CreateWindow({
     Title = "Happy Cat Hub",
-    SubTitle = "Fast atack top 1.",
+    SubTitle = "by taidz",
     TabWidth = 100,
     Size = UDim2.fromOffset(530, 350),
     Acrylic = false, -- The blur may be detectable, setting this to false disables blur entirely
@@ -1149,7 +1149,7 @@ end
 		v930_args:Stop()
 	end)
 
-local NoAttackAnimation = true
+    local NoAttackAnimation = true
 local DmgAttack = game:GetService("ReplicatedStorage").Assets.GUI:WaitForChild("DamageCounter")
 local PC = require(game.Players.LocalPlayer.PlayerScripts.CombatFramework.Particle)
 local RL = require(game:GetService("ReplicatedStorage").CombatFramework.RigLib)
@@ -1288,8 +1288,8 @@ spawn(function()
         end
     end
 end)
-
-local SelectFastAttackMode = "Taidz Fast"
+ 
+ local SelectFastAttackMode = "Taidz Fast"
 local SelectedFastAttackModes = {"Safe Attack", "Fast Attack", "Taidz Fast"}
 
 local function ChangeModeFastAttack(SelectFastAttackMode)
@@ -1320,11 +1320,10 @@ end)
 local FASTAT = Tabs.Setting:AddToggle("Fast_Attack", {Title = "Fast Attack", Default = true})
 FASTAT:OnChanged(function(value)
     Fast_Attack = value
-    DmgAttack.Enabled = not value  -- Bật/Tắt DmgAttack dựa trên giá trị Fast_Attack
     DamageAura = value
-    end
-end)
+    DmgAttack.Enabled = not value
 
+end)
 
 local Mouse = game:GetService("Players").LocalPlayer:GetMouse()
 Mouse.Button1Down:Connect(function()
@@ -1336,14 +1335,12 @@ Mouse.Button1Down:Connect(function()
         end
     end
 end)
- 
- 
 
 local DropdownTweenSpeed = Tabs.Setting:AddDropdown("DropdownTweenSpeed", {
             Title = "Tween Speed",
-            Values = {"350","400","450","550","700","725","800","1000"},
+            Values = {"350","400","450","550","700","750","800"},
             Multi = false,
-            Default = 400,
+            Default = 350,
         })
         DropdownTweenSpeed:SetValue("TweenSpeed")
         DropdownTweenSpeed:OnChanged(function(Value)
@@ -1356,7 +1353,7 @@ ToggleBypassTP:OnChanged(function(Value)
     BypassTP = Value
     
 end)
-Options.ToggleBypassTP:SetValue(true)
+Options.ToggleBypassTP:SetValue(false)
 
 local SliderPosX = Tabs.Setting:AddSlider("SliderPosX", {
     Title = "Pos X",
@@ -3868,26 +3865,21 @@ Bat_V3:OnChanged(function(Value)
 end)
 Options.Bat_V3:SetValue(false)
 
-local Bat_V4 = Tabs.NguoiChoi:AddToggle("Bat_V4", {Title = "Auto Use Race V4", Description = "", Default = true })
+local Bat_V4 = Tabs.NguoiChoi:AddToggle("Bat_V4", {Title = "Auto Use Race V4", Description = "", Default = false })
 Bat_V4:OnChanged(function(Value)
     Enable_RaceV4 = Value
-    task.spawn(function()
-        while Enable_RaceV4 do
-            wait()
-            -- Kiểm tra xem có thể sử dụng Race V4 không (ví dụ, bằng cách tìm kiếm một đối tượng hoặc hàm)
-            local OpenV4Race = inmyselfss("Awakening") -- Kiểm tra có đối tượng hay trạng thái Race V4 không
-            if OpenV4Race then
-                -- Nếu có, gọi RemoteFunction để kích hoạt Race V4
-                if OpenV4Race.RemoteFunction then
-                    OpenV4Race.RemoteFunction:InvokeServer(true)
-                end
+	task.spawn(function()
+		while Enable_RaceV4 do wait()
+			local OpenV4Race = inmyselfss("Awakening")
+			if OpenV4Race then
+				OpenV4Race.RemoteFunction:InvokeServer(true)
+			
             end
-        end
-    end)
+		end
+	end)
 end)
-
--- Thiết lập giá trị mặc định của Bat_V4 (nếu cần)
-Bat_V4:SetValue(true)  -- Đặt giá trị toggle mặc định là false (tắt)----pvp
+Options.Bat_V4:SetValue(false)
+----pvp
  
 local StoreFr = Tabs.Fruit:AddToggle("StoreFr", {Title = "Auto Store Fruit", Description = "", Default = false })
 StoreFr:OnChanged(function(Value)
