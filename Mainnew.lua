@@ -1305,7 +1305,7 @@ end
 spawn(function()
     while game:GetService("RunService").Stepped:Wait() do
         if isServerOverloaded() then
-            task.wait(3) -- Nếu server quá tải, dừng 3 giây
+            task.wait(1) -- Nếu server quá tải, dừng 3 giây
         else
             local ac = CombatFrameworkR.activeController
             if ac and ac.equipped and not CheckStun() then
