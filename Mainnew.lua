@@ -1158,7 +1158,7 @@ local AttackAnim = Instance.new("Animation")
 local AttackCoolDown = 0
 local cooldowntickFire = 0
 local MaxFire = 1000
-local FireCooldown = 0.0001
+local FireCooldown = 0
 local FireL = 0
 local Fast_Attack = true
 local bladehit = {}
@@ -1298,7 +1298,7 @@ local function ChangeModeFastAttack(SelectFastAttackMode)
     elseif SelectFastAttackMode == "Fast Attack" then
         FireCooldown = 0.02
     elseif SelectFastAttackMode == "Taidz Fast" then
-        FireCooldown = 0.0001
+        FireCooldown = 0.0000001
     end
 end
 
@@ -1340,7 +1340,7 @@ local DropdownTweenSpeed = Tabs.Setting:AddDropdown("DropdownTweenSpeed", {
             Title = "Tween Speed",
             Values = {"350","400","450","550","700"},
             Multi = false,
-            Default = 30,
+            Default = 350,
         })
         DropdownTweenSpeed:SetValue("TweenSpeed")
         DropdownTweenSpeed:OnChanged(function(Value)
