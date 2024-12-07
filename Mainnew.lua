@@ -1169,7 +1169,7 @@ local fask = { -- Định nghĩa bảng thiếu
 }
 
 -- Hàm tính toán Damage Aura
-local DamageAuraRadius = 60  -- Đặt bán kính cho Damage Aura (có thể điều chỉnh)
+local DamageAuraRadius = 50  -- Đặt bán kính cho Damage Aura (có thể điều chỉnh)
 local function ApplyDamageAura()
     local Client = game.Players.LocalPlayer
     local Enemies = game:GetService("Workspace").Enemies:GetChildren()
@@ -1341,9 +1341,17 @@ end)
 local FASTAT = Tabs.Setting:AddToggle("Fast_Attack", {Title = "Fast Attack", Default = true})
 FASTAT:OnChanged(function(value)
     Fast_Attack = value
-    DmgAttack.Enabled = not value
-    DamageAura = value
+    DmgAttack.Enabled = not value  -- Bật/Tắt DmgAttack dựa trên giá trị Fast_Attack
+
+    -- Nếu DamageAura là một đối tượng có thể bật/tắt, ta điều khiển như sau
+    if value then
+        ApplyDamageAura()  -- Gọi hàm ApplyDamageAura để tự động gây sát thương cho các mục tiêu trong phạm vi
+    else
+        -- Nếu cần tắt Damage Aura, có thể thêm logic ở đây
+        -- Ví dụ: Tắt hiệu ứng hoặc hủy các hành động gây sát thương
+    end
 end)
+
 
 local Mouse = game:GetService("Players").LocalPlayer:GetMouse()
 Mouse.Button1Down:Connect(function()
