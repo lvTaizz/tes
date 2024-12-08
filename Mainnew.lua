@@ -1,3 +1,14 @@
+_G.Key = "Taidz"
+local keychecked = true
+if _G.Key == "Taidz" then
+   
+    keychecked = true
+end
+if keychecked == true then
+          else
+    game.Players.LocalPlayer:Kick("key sai roi dit me may")
+end
+
 repeat task.wait() until game.Players
 repeat task.wait() until game.Players.LocalPlayer
 
@@ -30,7 +41,7 @@ local Window = Fluent:CreateWindow({
     Title = "Happy Cat Hub",
     SubTitle = "by taidz",
     TabWidth = 100,
-    Size = UDim2.fromOffset(530, 350),
+    Size = UDim2.fromOffset(500, 300),
     Acrylic = false, -- The blur may be detectable, setting this to false disables blur entirely
     Theme = "Dark",
     MinimizeKey = Enum.KeyCode.End
@@ -1296,9 +1307,9 @@ local function ChangeModeFastAttack(SelectFastAttackMode)
     if SelectFastAttackMode == "Safe Attack" then
         FireCooldown = 0.02
     elseif SelectFastAttackMode == "Fast Attack" then
-        FireCooldown = 0
+        FireCooldown = 0.0015
     elseif SelectFastAttackMode == "Taidz Fast" then
-        FireCooldown = 0.0000001
+        FireCooldown = 0
     end
 end
 
