@@ -1349,9 +1349,9 @@ end)
 
 local DropdownTweenSpeed = Tabs.Setting:AddDropdown("DropdownTweenSpeed", {
             Title = "Tween Speed",
-            Values = {"350","400","450","550","700","750","800","900"},
+            Values = {"350","400","450","900","1500","3000"},
             Multi = false,
-            Default = 350,
+            Default = 400,
         })
         DropdownTweenSpeed:SetValue("TweenSpeed")
         DropdownTweenSpeed:OnChanged(function(Value)
