@@ -1296,7 +1296,7 @@ local function ChangeModeFastAttack(SelectFastAttackMode)
     if SelectFastAttackMode == "Safe Attack" then
         FireCooldown = 0.02
     elseif SelectFastAttackMode == "Fast Attack" then
-        FireCooldown = 0.0015
+        FireCooldown = 0.00015
     elseif SelectFastAttackMode == "Taidz Fast" then
         FireCooldown = 0
     end
@@ -4592,7 +4592,7 @@ spawn(
 )
 --------ezload
 game.StarterGui:SetCore("SendNotification", {
-Title = "Loading",
-Text = "Done",
-Duration = 3,
+Title = "Happy Cat Hub",
+Text = "My Fast atack is number 1",
+Duration = 2,
 })
