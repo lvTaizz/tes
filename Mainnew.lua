@@ -1,14 +1,3 @@
-_G.Key = "Taidz"
-local keychecked = true
-if _G.Key == "Taidz" then
-   
-    keychecked = true
-end
-if keychecked == true then
-          else
-    game.Players.LocalPlayer:Kick("key sai roi dit me may")
-end
-
 repeat task.wait() until game.Players
 repeat task.wait() until game.Players.LocalPlayer
 
@@ -41,7 +30,7 @@ local Window = Fluent:CreateWindow({
     Title = "Happy Cat Hub",
     SubTitle = "by taidz",
     TabWidth = 100,
-    Size = UDim2.fromOffset(500, 300),
+    Size = UDim2.fromOffset(530, 350),
     Acrylic = false, -- The blur may be detectable, setting this to false disables blur entirely
     Theme = "Dark",
     MinimizeKey = Enum.KeyCode.End
@@ -1160,7 +1149,7 @@ end
 		v930_args:Stop()
 	end)
 
-    local NoAttackAnimation = true
+local NoAttackAnimation = true
 local DmgAttack = game:GetService("ReplicatedStorage").Assets.GUI:WaitForChild("DamageCounter")
 local PC = require(game.Players.LocalPlayer.PlayerScripts.CombatFramework.Particle)
 local RL = require(game:GetService("ReplicatedStorage").CombatFramework.RigLib)
@@ -1299,8 +1288,8 @@ spawn(function()
         end
     end
 end)
- 
- local SelectFastAttackMode = "Taidz Fast"
+
+local SelectFastAttackMode = "Taidz Fast"
 local SelectedFastAttackModes = {"Safe Attack", "Fast Attack", "Taidz Fast"}
 
 local function ChangeModeFastAttack(SelectFastAttackMode)
@@ -1324,7 +1313,7 @@ local SelectedFastAttackModesDropdown = Tabs.Setting:AddDropdown("SelectedFastAt
 SelectedFastAttackModesDropdown:OnChanged(function(value)
     SelectFastAttackMode = value
     ChangeModeFastAttack(SelectFastAttackMode)
-saveSettings()
+
 end)
 
 -- Toggle để bật tắt tấn công nhanh
@@ -1332,9 +1321,10 @@ local FASTAT = Tabs.Setting:AddToggle("Fast_Attack", {Title = "Fast Attack", Def
 FASTAT:OnChanged(function(value)
     Fast_Attack = value
     DamageAura = value
-    DmgAttack.Enabled = not value
-saveSettings()
+    DmgAttack.Enabled = not value 
+    end
 end)
+
 
 local Mouse = game:GetService("Players").LocalPlayer:GetMouse()
 Mouse.Button1Down:Connect(function()
@@ -1346,25 +1336,27 @@ Mouse.Button1Down:Connect(function()
         end
     end
 end)
+ 
+ 
 
 local DropdownTweenSpeed = Tabs.Setting:AddDropdown("DropdownTweenSpeed", {
             Title = "Tween Speed",
-            Values = {"350","400","450","900","1500","3000"},
+            Values = {"350","400","450","550","700","725","800","1000"},
             Multi = false,
             Default = 400,
         })
         DropdownTweenSpeed:SetValue("TweenSpeed")
         DropdownTweenSpeed:OnChanged(function(Value)
             getgenv().TweenSpeed = Value
-       saveSettings()
+       
  end)
 
 local ToggleBypassTP = Tabs.Setting:AddToggle("ToggleBypassTP", {Title = "Bypass Tp", Description = "", Default = true })
 ToggleBypassTP:OnChanged(function(Value)
     BypassTP = Value
-    saveSettings()
+    
 end)
-Options.ToggleBypassTP:SetValue(false)
+Options.ToggleBypassTP:SetValue(true)
 
 local SliderPosX = Tabs.Setting:AddSlider("SliderPosX", {
     Title = "Pos X",
@@ -1375,12 +1367,11 @@ local SliderPosX = Tabs.Setting:AddSlider("SliderPosX", {
     Rounding = 1,
     Callback = function(Value)
       posX = Value
-     
+      
 end
 })
 SliderPosX:OnChanged(function(Value)
   posX = Value
-
 end)
 SliderPosX:SetValue(0)
 
@@ -1393,12 +1384,11 @@ local SliderPosY = Tabs.Setting:AddSlider("SliderPosY", {
     Rounding = 1,
     Callback = function(Value)
       posY = Value
-    
+      
 end  
 })
 SliderPosY:OnChanged(function(Value)
   posY = Value
-
 end)
 SliderPosY:SetValue(30)
 
@@ -1430,7 +1420,7 @@ local DropdownSelectWeapon = Tabs.Main:AddDropdown("DropdownSelectWeapon", {
 DropdownSelectWeapon:SetValue('Melee')
 DropdownSelectWeapon:OnChanged(function(Value)
     ChooseWeapon = Value
-saveSettings()
+
 end)
 task.spawn(function()
     while wait() do
@@ -1724,7 +1714,7 @@ local startfarm = Tabs.Main:AddToggle("Start Method Farm", { Title = "Start Meth
 startfarm:OnChanged(function(Value)
     _G.MethodFarm = Value
     StopTween(_G.MethodFarm )
-   saveSettings() 
+    
 end)
 
 spawn(function ()
@@ -1945,7 +1935,7 @@ end)
 local ToggleMobAura = Tabs.Main:AddToggle("ToggleMobAura", {Title = "Farm Mob Aura", Description = "", Default = false })
 ToggleMobAura:OnChanged(function(Value)
     _G.AutoNear = Value
-   saveSettings() 
+    
 end)
 Options.ToggleMobAura:SetValue(false)
 spawn(function()
@@ -2238,8 +2228,7 @@ end)
     DropdownIsland:SetValue("...")
     DropdownIsland:OnChanged(function(Value)
         _G.SelectIsland = Value
-    saveSettings()
-end)
+    end)
     
     local ToggleIsland = Tabs.Travel:AddToggle("ToggleIsland", {Title = "Start Tween", Description = "", Default = false })
     ToggleIsland:OnChanged(function(Value)
@@ -2345,8 +2334,7 @@ end)
                     Tween(CFrame.new(-16542.447265625, 55.68632888793945, 1044.41650390625))
                 end
             until not _G.TeleportIsland
-       saveSettings()
-       end      
+        end
     end)
     Options.ToggleIsland:SetValue(false)
 
@@ -2371,13 +2359,13 @@ local DropdownRaid = Tabs.Raid:AddDropdown("DropdownRaid", {
 DropdownRaid:SetValue("...")
 DropdownRaid:OnChanged(function(Value)
     _G.SelectChip= Value
-  saveSettings()  
+    
 end)
 
 local ToggleBuy = Tabs.Raid:AddToggle("ToggleBuy", {Title = "Auto Buy Chip", Description = "", Default = false })
 ToggleBuy:OnChanged(function(Value)
     _G.Auto_Buy_Chips_Dungeon = Value
-    saveSettings()
+    
 end)
 Options.ToggleBuy:SetValue(false)
 spawn(function()
@@ -2398,7 +2386,7 @@ end)
     local ToggleStart = Tabs.Raid:AddToggle("ToggleStart", {Title = "Auto Start Raid", Description = "", Default = false })
     ToggleStart:OnChanged(function(Value)
         _G.Auto_StartRaid = Value
-       saveSettings() 
+        
 end)
 Options.ToggleStart:SetValue(false)
 
@@ -2423,7 +2411,7 @@ end)
 local ToggleKillAura = Tabs.Raid:AddToggle("ToggleKillAura", {Title = "Kill Aura", Default = false })
 ToggleKillAura:OnChanged(function(Value)
     KillAura = Value
-   saveSettings() 
+    
 end)
 Options.ToggleKillAura:SetValue(false)
 spawn(function()
@@ -2448,7 +2436,7 @@ end)
 local ToggleNextIsland = Tabs.Raid:AddToggle("ToggleNextIsland", {Title = "Auto Next Island", Description = "", Default = false })
 ToggleNextIsland:OnChanged(function(Value)
     _G.AutoNextIsland = Value
-   saveSettings() 
+    
 end)
 Options.ToggleNextIsland:SetValue(false)
 spawn(function()
@@ -2476,7 +2464,7 @@ end)
 local ToggleGetFruit = Tabs.Raid:AddToggle("ToggleGetFruit", {Title = "Get Fruit Low Money", Description = "", Default = false })
 ToggleGetFruit:OnChanged(function(Value)
     _G.Autofruit = Value
-    saveSettings()
+    
 end)
 
 spawn(function()
@@ -2685,13 +2673,13 @@ local DropdownMaterial = Tabs.Raid:AddDropdown("DropdownMaterial", {
 DropdownMaterial:SetValue("Conjured Cocoa")
 DropdownMaterial:OnChanged(function(Value)
     SelectMaterial = Value
-   saveSettings() 
+    
 end)
 
 local ToggleMaterial = Tabs.Raid:AddToggle("ToggleMaterial", {Title = "Auto Material", Description = "", Default = false })
 ToggleMaterial:OnChanged(function(Value)
     _G.AutoMaterial = Value
-    saveSettings()
+    
 end)
 Options.ToggleMaterial:SetValue(false)
 spawn(function()
@@ -2740,7 +2728,7 @@ spawn(function()
   local Auto_Elite = Tabs.Stack:AddToggle("Auto_Elite", {Title = "Auto Elite", Description = "Sea 3 Function Only", Default = false })
   Auto_Elite:OnChanged(function(Value)
     _G.DitElite = Value
-    saveSettings()
+    
   end)
   Options.Auto_Elite:SetValue(false)
   
@@ -2786,7 +2774,7 @@ end)
   local Auto_Pirate = Tabs.Stack:AddToggle("Auto_Pirate", {Title = "Auto Pirate Raid", Description = "Sea 3 Function Only", Default = false })
   Auto_Pirate:OnChanged(function(Value)
     _G.AutoRaidPirate = Value
-   saveSettings() 
+    
  end)
   Options.Auto_Pirate:SetValue(false)
   
@@ -2825,7 +2813,7 @@ end)
   local Open_HakiPad = Tabs.Stack:AddToggle("Open_HakiPad", {Title = "Open Haki Pad", Description = "Sea 3 Function Only", Default = false })
   Open_HakiPad:OnChanged(function(Value)
     _G.AutoHakiPad = Value
-   saveSettings() 
+    
  end)
   Options.Open_HakiPad:SetValue(false)
   
@@ -2850,7 +2838,7 @@ end)
   local Auto_Killindra = Tabs.Stack:AddToggle("Auto_Killindra", {Title = "Auto Kill Rip Indra", Description = "Sea 3 Function Only", Default = false })
   Auto_Killindra:OnChanged(function(Value)
     _G.RipIndraKill = Value
-    saveSettings()
+    
 end)
   Options.Auto_Killindra:SetValue(false)
 
@@ -2878,7 +2866,7 @@ end)
   local Auto_SoulReaper= Tabs.Stack:AddToggle("Auto_SoulReaper", {Title = "Auto Kill Soul Reaper", Description = "Sea 3 Function Only", Default = false })
   Auto_SoulReaper:OnChanged(function(Value)
     _G.AutoFarmBossHallow = Value
-    saveSettings()
+    
 end)
   Options.Auto_SoulReaper:SetValue(false)
 
@@ -2913,7 +2901,7 @@ end)
 local AutoBartilo = Tabs.Stack:AddToggle("AutoBartilo", {Title = "Auto Bartilo", Description = "Sea 2 Function Only", Default = false })
 AutoBartilo:OnChanged(function(Value)
     _G.AutoBartilo = Value
-    saveSettings()
+    
  end)
   Options.AutoBartilo:SetValue(false)
 
@@ -2989,7 +2977,7 @@ end)
   local Auto_RauDen = Tabs.Stack:AddToggle("Auto_RauDen", {Title = "Auto Kill Black Beard", Description = "Sea 2 Function Only", Default = false })
   Auto_RauDen:OnChanged(function(Value)
     _G.Auto_DarkBoss = Value
-    saveSettings()
+    
 end)
   Options.Auto_RauDen:SetValue(false)
   
@@ -3023,7 +3011,7 @@ end)
 local Auto_VuaBot = Tabs.Stack:AddToggle("Auto_VuaBot", {Title = "Auto Dough King", Description = "Sea 3 Function Only", Default = false })
 Auto_VuaBot:OnChanged(function(Value)
     _G.Auto_DoughKing = Value
-   saveSettings() 
+    
 end)
 Options.Auto_VuaBot:SetValue(false)
 
@@ -3123,7 +3111,7 @@ end)
 local ToggleFactory = Tabs.Stack:AddToggle("ToggleFactory", {Title = "Auto Factory", Description = "Sea 2 Function Only", Default = false })
         ToggleFactory:OnChanged(function(Value)
             _G.Factory = Value
-         saveSettings()   
+            
   end)
         Options.ToggleFactory:SetValue(false)
 
@@ -3159,7 +3147,7 @@ local ToggleFactory = Tabs.Stack:AddToggle("ToggleFactory", {Title = "Auto Facto
 local Soul_Guitar = Tabs.Stack:AddToggle("Soul_Guitar", {Title = "Auto Soul Guitar", Description = "Sea 3 Function Only", Default = false })
 Soul_Guitar:OnChanged(function(Value)
     _G.AutoSoulGuitar = Value
-    saveSettings()
+    
 end)
 Options.Soul_Guitar:SetValue(false)
 
@@ -3350,7 +3338,7 @@ Toggle = Tabs.Stack:AddToggle("MyToggle", {Title = "Auto CDK", Description = "Se
 
     Toggle:OnChanged(function(Value)
         Auto_Cursed_Dual_Katana = Value
-     saveSettings()   
+        
   end)
         
         spawn(function()
@@ -3806,7 +3794,7 @@ Tabs.NguoiChoi:AddButton({
 local ToggleNoClip = Tabs.NguoiChoi:AddToggle("ToggleNoClip", {Title = "No Clip", Description = "", Default = false })
 ToggleNoClip:OnChanged(function(value)
     _G.LOf = value
-  saveSettings()  
+    
 end)
 Options.ToggleNoClip:SetValue(false)
 spawn(function()
@@ -3826,7 +3814,7 @@ end)
 local ToggleKen = Tabs.NguoiChoi:AddToggle("ToggleKen", {Title = "Auto Enable Observation", Description = "", Default = false })
 ToggleKen:OnChanged(function(value)
     _G.TurnKen = value
-    saveSettings()
+    
 end)
 Options.ToggleKen:SetValue(false)
 
@@ -3850,7 +3838,7 @@ end)
 local ToggleWalkOnWater = Tabs.NguoiChoi:AddToggle("ToggleWalkOnWater", {Title = "Walk On Water", Description = "", Default = false })
 ToggleWalkOnWater:OnChanged(function(Value)
     _G.WalkWater = Value
-    saveSettings()
+    
 end)
 Options.ToggleWalkOnWater:SetValue(false)
  
@@ -3873,20 +3861,38 @@ Bat_V3:OnChanged(function(Value)
 		while Enable_RaceV3 do wait()
 			if Enable_RaceV3 then
 				game:GetService("ReplicatedStorage").Remotes.CommE:FireServer("ActivateAbility")
-			saveSettings()
+			
             end
 		end
 	end)
 end)
 Options.Bat_V3:SetValue(false)
 
+local Bat_V4 = Tabs.NguoiChoi:AddToggle("Bat_V4", {Title = "Auto Use Race V4", Description = "", Default = true })
+Bat_V4:OnChanged(function(Value)
+    Enable_RaceV4 = Value
+    task.spawn(function()
+        while Enable_RaceV4 do
+            wait()
+            -- Kiểm tra xem có thể sử dụng Race V4 không (ví dụ, bằng cách tìm kiếm một đối tượng hoặc hàm)
+            local OpenV4Race = inmyselfss("Awakening") -- Kiểm tra có đối tượng hay trạng thái Race V4 không
+            if OpenV4Race then
+                -- Nếu có, gọi RemoteFunction để kích hoạt Race V4
+                if OpenV4Race.RemoteFunction then
+                    OpenV4Race.RemoteFunction:InvokeServer(true)
+                end
+            end
+        end
+    end)
+end)
 
-----pvp
+-- Thiết lập giá trị mặc định của Bat_V4 (nếu cần)
+Bat_V4:SetValue(true)  -- Đặt giá trị toggle mặc định là false (tắt)----pvp
  
 local StoreFr = Tabs.Fruit:AddToggle("StoreFr", {Title = "Auto Store Fruit", Description = "", Default = false })
 StoreFr:OnChanged(function(Value)
     _G.AutoStoreFruit = Value
-saveSettings()    
+    
 end)
 Options.StoreFr:SetValue(false)
 
@@ -3894,7 +3900,7 @@ Options.StoreFr:SetValue(false)
     Toggle = Tabs.Shop:AddToggle("MyToggle", {Title = "Random Bone", Default = _G.Auto_Random_Bone })
     Toggle:OnChanged(function(Value)
 		_G.Auto_Random_Bone = Value
-	saveSettings()	
+		
 		end)
     spawn(function()
             while wait(.1) do
@@ -3907,7 +3913,7 @@ Options.StoreFr:SetValue(false)
 local ToggleRandomFruit = Tabs.Fruit:AddToggle("ToggleRandomFruit", {Title = "Random Fruit", Default = false })
 ToggleRandomFruit:OnChanged(function(Value)
     _G.Random_Auto = Value
-    saveSettings()
+    
 end)
 Options.ToggleRandomFruit:SetValue(false)
 spawn(function()
@@ -3923,14 +3929,14 @@ end)
 local Auto_Kiem = Tabs.Shop:AddToggle("Auto_Kiem", {Title = "Auto Buy Legendary Sword", Description = "", Default = false })
 Auto_Kiem:OnChanged(function(Value)  
     getgenv().AutoBuyLegendarySword = Value
-saveSettings()
+
 end)
 Options.Auto_Kiem:SetValue(false)
 
 local Haki_Bth = Tabs.Shop:AddToggle("Haki_Bth", {Title = "Auto Buy Haki Color", Description = "", Default = false })
 Haki_Bth:OnChanged(function(Value)  
     getgenv().AutoBuyEnchancementColour = Value
-saveSettings()
+
 end)
 Options.Haki_Bth:SetValue(false)
 --melee--
@@ -4595,6 +4601,6 @@ spawn(
 --------ezload
 game.StarterGui:SetCore("SendNotification", {
 Title = "Loading",
-Text = "Done",
+Text = "Done!!",
 Duration = 3,
 })
