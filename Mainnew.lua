@@ -3880,16 +3880,26 @@ Bat_V3:OnChanged(function(Value)
 end)
 Options.Bat_V3:SetValue(false)
 
-local Bat_V4 = Tabs.NguoiChoi:AddToggle("Bat_V4", {Title = "Auto Use Race V4", Description = "", Default = false })
+local Bat_V4 = Tabs.NguoiChoi:AddToggle("Bat_V4", {
+    Title = "Auto Use Race V4",
+    Description = "",
+    Default = false
+})
+
+-- Biến toàn cục để theo dõi trạng thái
+_G.V4 = false
+
+-- Lắng nghe sự kiện thay đổi trạng thái toggle
 Bat_V4:OnChanged(function(Value)
     _G.V4 = Value
-	spawn(function()
-    while wait() do
-        pcall(function()
-            if _G.V4 then
-                game:GetService("VirtualInputManager"):SendKeyEvent(true,"Y",false,game)
-                wait(0.1)
-                game:GetService("VirtualInputManager"):SendKeyEvent(false,"Y",false,game)
+    if _G.V4 then
+        spawn(function()
+            while _G.V4 and wait() do
+                pcall(function()
+                    game:GetService("VirtualInputManager"):SendKeyEvent(true, "Y", false, game)
+                    wait(0.1)
+                    game:GetService("VirtualInputManager"):SendKeyEvent(false, "Y", false, game)
+                end)
             end
         end)
     end
