@@ -32,34 +32,6 @@ game.StarterGui:SetCore("SendNotification", {
     Duration = 2,
 })
 
-local foldername = "Happy cat hub HUB"
-local filename = game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Name..game.Players.LocalPlayer.Name.." Config.json"
- 
-function saveSettings()
-    local HttpService = game:GetService("HttpService")
-    local json = HttpService:JSONEncode(_G.Settings)
-    if (writefile) then
-        if isfolder(foldername) then
-			if isfile(foldername.."\\"..filename) then
-				writefile(foldername.."\\"..filename, json)
-			else
-				writefile(foldername.."\\"..filename, json)
-			end
-        else
-            makefolder(foldername)
-			writefile(foldername.."\\"..filename, json)
-        end
-    end
-end
-
-function loadSettings()
-    local HttpService = game:GetService("HttpService")
-    if isfile(foldername.."\\"..filename) then
-        _G.Settings = HttpService:JSONDecode(readfile(foldername.."\\"..filename))
-    end
-end
- 
-loadSettings()
 
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
