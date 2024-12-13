@@ -1149,7 +1149,7 @@ end
 		v930_args:Stop()
 	end)
 
-    local NoAttackAnimation = true
+local NoAttackAnimation = true
 local DmgAttack = game:GetService("ReplicatedStorage").Assets.GUI:WaitForChild("DamageCounter")
 local PC = require(game.Players.LocalPlayer.PlayerScripts.CombatFramework.Particle)
 local RL = require(game:GetService("ReplicatedStorage").CombatFramework.RigLib)
@@ -1162,9 +1162,11 @@ local FireCooldown = 0
 local FireL = 0
 local Fast_Attack = true
 local bladehit = {}
-local ClickNoCooldown = true -- Định nghĩa biến thiếu
-local fask = { -- Định nghĩa bảng thiếu
-    delay = task.delay,
+local ClickNoCooldown = true
+local fask = { -- Định nghĩa bảng với delay bằng 0
+    delay = function(_, func)
+        func()
+    end,
     spawn = task.spawn
 }
 
@@ -1225,10 +1227,10 @@ local CombatFrameworkR = getupvalues(CombatFramework)[2]
 local function CancelCoolDown()
     local ac = CombatFrameworkR.activeController
     if ac and ac.equipped then
-        AttackCoolDown = tick() + (FireCooldown or 0.01) + ((FireL / MaxFire) * 0.3)
+        AttackCoolDown = tick() + (FireCooldown or 0.01)
         RigEven:FireServer("weaponChange", ac.currentWeaponModel.Name)
         FireL = FireL + 1
-        fask.delay((FireCooldown or 0.01) + ((FireL + 0.3 / MaxFire) * 0.3), function()
+        fask.delay(0, function()
             FireL = FireL - 1
         end)
     end
@@ -1266,7 +1268,7 @@ local function AttackFunction(typef)
             local StartP = ac.humanoid:LoadAnimation(AttackAnim)
             StartP:Play(0.01, 0.01, 0.01)
             RigEven:FireServer("hit", bladehit, REALID and 3 or 2, "")
-            fask.delay(0.01, function()
+            fask.delay(0, function()
                 StartP:Stop()
             end)
         end
