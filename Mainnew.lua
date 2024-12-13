@@ -16,6 +16,7 @@ if not game:IsLoaded() then game.Loaded:Wait() end
 local plr = game.Players.LocalPlayer
 
 game.StarterGui:SetCore("SendNotification", {
+    Icon = "rbxassetid://104450799419041",
     Title = "Happy Cat Hub",
     Text = "Loading!",
     Duration = 2,
@@ -1467,7 +1468,7 @@ Tabs.Main:AddParagraph({
 })
 
 local ListF = {"Level Farm", "Farm Bones", "Farm Katakuri"}
-    FMode = "Level Farm"
+    FMode = "Farm Katakuri"
     
     local methodfarm = Tabs.Main:AddDropdown("DropdownTweenSpeed", {
     Title = "Method Farm",
@@ -4600,7 +4601,8 @@ spawn(
 )
 --------ezload
 game.StarterGui:SetCore("SendNotification", {
+Icon = "rbxassetid://104450799419041",
 Title = "Happy Cat Hub",
-Text = "Script free VIP",
+Text = "Thanks for use",
 Duration = 2,
 })
