@@ -1154,11 +1154,23 @@ local DmgAttack = game:GetService("ReplicatedStorage").Assets.GUI:WaitForChild("
 local PC = require(game.Players.LocalPlayer.PlayerScripts.CombatFramework.Particle)
 local RL = require(game:GetService("ReplicatedStorage").CombatFramework.RigLib)
 local RigEven = game:GetService("ReplicatedStorage").RigControllerEvent
+local AttackAnim = Instance.new("Animation")
+local AttackCoolDown = 0
+local cooldowntickFire = 0
+local MaxFire = 1000
+local FireCooldown = 0
+local FireL = 0
 local Fast_Attack = true
+local bladehit = {}
+local ClickNoCooldown = true  -- Thêm biến này để bật hoặc tắt Click No Cooldown
+local fask = { -- Định nghĩa bảng thiếu
+    delay = task.delay,
+    spawn = task.spawn
+}
 
 RL.wrapAttackAnimationAsync = function(a, b, c, d, func)
     if not NoAttackAnimation then
-        return RL.wrapAttackAnimationAsync(a, b, c, d, func)
+        return RL.wrapAttackAnimationAsync(a, b, c, 60, func)
     end
 
     local Hits = {}
@@ -1177,6 +1189,7 @@ RL.wrapAttackAnimationAsync = function(a, b, c, d, func)
             table.insert(Hits, Human.RootPart)
         end
     end
+    a:Play(0.01, 0.01, 0.01)
     pcall(func, Hits)
 end
 
@@ -1193,17 +1206,71 @@ local function getAllBladeHits(Sizes)
     return Hits
 end
 
+local function getAllBladeHitsPlayers(Sizes)
+    local Hits = {}
+    local Client = game.Players.LocalPlayer
+    local Characters = game:GetService("Workspace").Characters:GetChildren()
+    for _, v in pairs(Characters) do
+        local Human = v:FindFirstChildOfClass("Humanoid")
+        if v.Name ~= Client.Name and Human and Human.RootPart and Human.Health > 0 and Client:DistanceFromCharacter(Human.RootPart.Position) < Sizes + 5 then
+            table.insert(Hits, Human.RootPart)
+        end
+    end
+    return Hits
+end
+
 local CombatFramework = require(game:GetService("Players").LocalPlayer.PlayerScripts:WaitForChild("CombatFramework"))
 local CombatFrameworkR = getupvalues(CombatFramework)[2]
 
-local function AttackFunction()
+local function CancelCoolDown()
     local ac = CombatFrameworkR.activeController
     if ac and ac.equipped then
-        local bladehit = getAllBladeHits(60)
+        AttackCoolDown = tick() + (FireCooldown or 0.01) + ((FireL / MaxFire) * 0.3)
+        RigEven:FireServer("weaponChange", ac.currentWeaponModel.Name)
+        FireL = FireL + 1
+        fask.delay((FireCooldown or 0.01) + ((FireL + 0.3 / MaxFire) * 0.3), function()
+            FireL = FireL - 1
+        end)
+    end
+end
+
+local function AttackFunction(typef)
+    local ac = CombatFrameworkR.activeController
+    if ac and ac.equipped then
+        local bladehit = {}
+        if typef == 1 then
+            bladehit = getAllBladeHits(60)
+        elseif typef == 2 then
+            bladehit = getAllBladeHitsPlayers(65)
+        else
+            for _, v2 in pairs(getAllBladeHits(55)) do
+                table.insert(bladehit, v2)
+            end
+            for _, v3 in pairs(getAllBladeHitsPlayers(55)) do
+                table.insert(bladehit, v3)
+            end
+        end
         if #bladehit > 0 then
-            ac.timeToNextAttack = 0 -- Loại bỏ giới hạn thời gian giữa các đòn đánh
-            ac.hitboxMagnitude = 60 -- Mở rộng hitbox nếu cần
-            RigEven:FireServer("hit", bladehit, 2, "") -- Tấn công trực tiếp không qua hoạt ảnh
+            if ClickNoCooldown then
+                ac.timeToNextAttack = 0  -- Loại bỏ thời gian cooldown giữa các đòn tấn công
+            end
+            pcall(fask.spawn, ac.attack, ac)
+            if tick() > AttackCoolDown then
+                CancelCoolDown()
+            end
+            if tick() - cooldowntickFire > 0.3 then
+                ac.hitboxMagnitude = 60
+                pcall(fask.spawn, ac.attack, ac)
+                cooldowntickFire = tick()
+            end
+            local REALID = ac.anims.basic[3] or ac.anims.basic[2]
+            AttackAnim.AnimationId = REALID
+            local StartP = ac.humanoid:LoadAnimation(AttackAnim)
+            StartP:Play(0.01, 0.01, 0.01)
+            RigEven:FireServer("hit", bladehit, REALID and 3 or 2, "")
+            fask.delay(0.01, function()
+                StartP:Stop()
+            end)
         end
     end
 end
@@ -1216,11 +1283,13 @@ end
 spawn(function()
     while game:GetService("RunService").Stepped:Wait() do
         local ac = CombatFrameworkR.activeController
-        if ac and ac.equipped and not CheckStun() and Fast_Attack then
-            AttackFunction()
+        if ac and ac.equipped and not CheckStun() then
+            if Fast_Attack then
+                pcall(AttackFunction, 1)
+            end
         end
     end
-end) 
+end)
 
  local SelectFastAttackMode = "Taidz Fast"
 local SelectedFastAttackModes = {"Safe Attack", "Fast Attack", "Taidz Fast"}
