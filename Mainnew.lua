@@ -3870,17 +3870,23 @@ Options.Bat_V3:SetValue(false)
 local Bat_V4 = Tabs.NguoiChoi:AddToggle("Bat_V4", {Title = "Auto Use Race V4", Description = "", Default = false })
 Bat_V4:OnChanged(function(Value)
     Enable_RaceV4 = Value
-	task.spawn(function()
-		while Enable_RaceV4 do wait()
-			local OpenV4Race = inmyselfss("Awakening")
-			if OpenV4Race then
-				OpenV4Race.RemoteFunction:InvokeServer(true)
-			
+    print("Enable_RaceV4 changed to:", Enable_RaceV4)  -- In ra giá trị mới của Enable_RaceV4
+    
+    task.spawn(function()
+        while Enable_RaceV4 do 
+            wait()  -- Đợi một chu kỳ
+            local OpenV4Race = inmyselfss("Awakening")
+            if OpenV4Race then
+                print("Awakening found, invoking server...")  -- Kiểm tra có tìm thấy "Awakening" không
+                OpenV4Race.RemoteFunction:InvokeServer(true)
+            else
+                print("Awakening not found.")  -- Nếu không tìm thấy "Awakening"
             end
-		end
-	end)
+        end
+    end)
 end)
-Options.Bat_V4:SetValue(false)
+
+Options.Bat_V4:SetValue(false)  -- Đặt giá trị mặc định của Bat_V4 là false
 ----pvp
  
 local StoreFr = Tabs.Fruit:AddToggle("StoreFr", {Title = "Auto Store Fruit", Description = "", Default = false })
