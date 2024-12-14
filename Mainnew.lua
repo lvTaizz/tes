@@ -3930,9 +3930,7 @@ Bat_V3:OnChanged(function(Value)
 end)
 Options.Bat_V3:SetValue(false)
 
-local Bat_V4 = Tabs.NguoiChoi:AddToggle("MyToggle", {Title = "Turn On V4", Default = false })
-
-    Toggle:OnChanged(function(Value)
+local Bat_V4 = Tabs.NguoiChoi:AddToggle("MyToggle", {Title = "Turn On V4", Default = true })
         spawn(function()
     while wait() do
         pcall(function()
