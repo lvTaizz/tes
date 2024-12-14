@@ -3916,7 +3916,7 @@ spawn(function()
     end
 end)
 
-local Bat_V3 = Tabs.NguoiChoi:AddToggle("Bat_V3", {Title = "Auto Use Race V3", Description = "", Default = false })
+local Bat_V3 = Tabs.NguoiChoi:AddToggle("Bat_V3", {Title = "Turn On V3", Description = "", Default = false })
 Bat_V3:OnChanged(function(Value)
     Enable_RaceV3 = Value
     task.spawn(function()
@@ -3933,20 +3933,14 @@ Options.Bat_V3:SetValue(false)
 local Bat_V4 = Tabs.NguoiChoi:AddToggle("MyToggle", {Title = "Turn On V4", Default = false })
 
     Toggle:OnChanged(function(Value)
-        AutoAwakeningRace = Value
-    end)
-    
-    spawn(function()
-           while wait() do
-		       pcall(function()
-			       if AutoAwakeningRace then
-				       game:GetService("VirtualInputManager"):SendKeyEvent(true,"Y",false,game)
-				       wait(0.1)
-                       game:GetService("VirtualInputManager"):SendKeyEvent(false,"Y",false,game)
-			       end
-		       end)
-           end
-       end)
+        spawn(function()
+    while wait() do
+        pcall(function()
+            if V4 then
+                game:GetService("VirtualInputManager"):SendKeyEvent(true,"Y",false,game)
+                wait(0.1)
+                game:GetService("VirtualInputManager"):SendKeyEvent(false,"Y",false,game)
+end)
 ----pvp
  
 local StoreFr = Tabs.Fruit:AddToggle("StoreFr", {Title = "Auto Store Fruit", Description = "", Default = false })
