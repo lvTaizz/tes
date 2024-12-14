@@ -2648,7 +2648,69 @@ spawn(function()
     end
 end)
 ---raid law
-  
+ lawraid = Tabs.Raid:AddSection("Law Raid")	
+
+Tabs.Raid:AddButton({
+    Title = "Auto Buy Chip Law",
+    Description = "",
+    Callback = function()
+    local args = {
+       [1] = "BlackbeardReward",
+       [2] = "Microchip",
+       [3] = "2"
+    }
+    game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer(unpack(args))
+    end
+})
+
+Tabs.Raid:AddButton({
+        Title = "Auto Start Raid Law",
+        Description = "",
+        Callback = function()            
+fireclickdetector(game:GetService("Workspace").Map.CircleIsland.RaidSummon.Button.Main.ClickDetector)
+        end
+    })
+
+
+
+local Toggle = Tabs.Raid:AddToggle("MyToggle", {Title = "Auto Kill Law Raid", Default = false })
+
+    Toggle:OnChanged(function(Value)
+        _G.AutoLawRaid = Value
+		StopTween(_G.AutoLawRaid)
+    end)
+
+ spawn(function()
+        while wait() do
+            if _G.AutoLawRaid then
+                pcall(function()
+                    if game:GetService("Workspace").Enemies:FindFirstChild("Order") then
+                        for i,v in pairs(game:GetService("Workspace").Enemies:GetChildren()) do
+                            if v.Name == "Order" then
+                                if v:FindFirstChild("Humanoid") and v:FindFirstChild("HumanoidRootPart") and v.Humanoid.Health > 0 then
+                                    repeat task.wait()
+                                    NeedAttacking = true
+                                        AutoHaki()
+                                        EquipWeapon(_G.SelectWeapon)
+                                        v.HumanoidRootPart.CanCollide = false
+                                        v.Humanoid.WalkSpeed = 0
+                                                                     
+                                        topos(v.HumanoidRootPart.CFrame * CFrame.new(PosX,PosY,PosZ))
+                                        sethiddenproperty(game:GetService("Players").LocalPlayer,"SimulationRadius",math.huge)
+                                    until not _G.AutoLawRaid or not v.Parent or v.Humanoid.Health <= 0
+                                end
+                            end
+                        end
+                    else
+                    NeedAttacking = true
+                        if game:GetService("ReplicatedStorage"):FindFirstChild("Order") then
+                            topos(game:GetService("ReplicatedStorage"):FindFirstChild("Order").HumanoidRootPart.CFrame * CFrame.new(5,10,2))
+                        end
+                    end
+                end)
+            end
+        end
+    end) 
 
 if First_Sea then
     MaterialList = {
