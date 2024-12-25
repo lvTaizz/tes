@@ -1138,186 +1138,97 @@ end
 --------------------------------------------------------------------------------
     --Remove Effect
     -----------------------------------------------------------
-    if game:GetService("ReplicatedStorage").Effect.Container:FindFirstChild("Death") then
-        game:GetService("ReplicatedStorage").Effect.Container.Death:Destroy()
-    end
-    if game:GetService("ReplicatedStorage").Effect.Container:FindFirstChild("Respawn") then
-        game:GetService("ReplicatedStorage").Effect.Container.Respawn:Destroy()
-    end
+-- Kiểm tra và loại bỏ các hiệu ứng không cần thiết
+if game:GetService("ReplicatedStorage").Effect.Container:FindFirstChild("Death") then
+    game:GetService("ReplicatedStorage").Effect.Container.Death:Destroy()
+end
+if game:GetService("ReplicatedStorage").Effect.Container:FindFirstChild("Respawn") then
+    game:GetService("ReplicatedStorage").Effect.Container.Respawn:Destroy()
+end
 
-    spawn(function()
-		local v930_args = require(game.ReplicatedStorage.Util.CameraShaker)
-		v930_args:Stop()
-	end)
+-- Dừng Camera Shaker
+spawn(function()
+    local CameraShaker = require(game.ReplicatedStorage.Util.CameraShaker)
+    CameraShaker:Stop()
+end)
 
-local NoAttackAnimation = true
-local DmgAttack = game:GetService("ReplicatedStorage").Assets.GUI:WaitForChild("DamageCounter")
-local PC = require(game.Players.LocalPlayer.PlayerScripts.CombatFramework.Particle)
-local RL = require(game:GetService("ReplicatedStorage").CombatFramework.RigLib)
-local RigEven = game:GetService("ReplicatedStorage").RigControllerEvent
-local AttackAnim = Instance.new("Animation")
-local AttackCoolDown = 0
-local cooldowntickFire = 0
-local MaxFire = 1000
-local FireCooldown = 0
-local FireL = 0
+-- Biến và cài đặt cần thiết
 local Fast_Attack = true
-local bladehit = {}
-local ClickNoCooldown = true  -- Thêm biến này để bật hoặc tắt Click No Cooldown
-local fask = { -- Định nghĩa bảng thiếu
-    delay = task.delay,
-    spawn = task.spawn
-}
-
-RL.wrapAttackAnimationAsync = function(a, b, c, d, func)
-    if not NoAttackAnimation then
-        return RL.wrapAttackAnimationAsync(a, b, c, 60, func)
-    end
-
-    local Hits = {}
-    local Client = game.Players.LocalPlayer
-    local Characters = game:GetService("Workspace").Characters:GetChildren()
-    for _, v in pairs(Characters) do
-        local Human = v:FindFirstChildOfClass("Humanoid")
-        if v.Name ~= Client.Name and Human and Human.RootPart and Human.Health > 0 and Client:DistanceFromCharacter(Human.RootPart.Position) < 65 then
-            table.insert(Hits, Human.RootPart)
-        end
-    end
-    local Enemies = game:GetService("Workspace").Enemies:GetChildren()
-    for _, v in pairs(Enemies) do
-        local Human = v:FindFirstChildOfClass("Humanoid")
-        if Human and Human.RootPart and Human.Health > 0 and Client:DistanceFromCharacter(Human.RootPart.Position) < 65 then
-            table.insert(Hits, Human.RootPart)
-        end
-    end
-    a:Play(0.01, 0.01, 0.01)
-    pcall(func, Hits)
-end
-
-local function getAllBladeHits(Sizes)
-    local Hits = {}
-    local Client = game.Players.LocalPlayer
-    local Enemies = game:GetService("Workspace").Enemies:GetChildren()
-    for _, v in pairs(Enemies) do
-        local Human = v:FindFirstChildOfClass("Humanoid")
-        if Human and Human.RootPart and Human.Health > 0 and Client:DistanceFromCharacter(Human.RootPart.Position) < Sizes + 5 then
-            table.insert(Hits, Human.RootPart)
-        end
-    end
-    return Hits
-end
-
-local function getAllBladeHitsPlayers(Sizes)
-    local Hits = {}
-    local Client = game.Players.LocalPlayer
-    local Characters = game:GetService("Workspace").Characters:GetChildren()
-    for _, v in pairs(Characters) do
-        local Human = v:FindFirstChildOfClass("Humanoid")
-        if v.Name ~= Client.Name and Human and Human.RootPart and Human.Health > 0 and Client:DistanceFromCharacter(Human.RootPart.Position) < Sizes + 5 then
-            table.insert(Hits, Human.RootPart)
-        end
-    end
-    return Hits
-end
-
+local ClickNoCooldown = true
+local HitboxRange = 55
 local CombatFramework = require(game:GetService("Players").LocalPlayer.PlayerScripts:WaitForChild("CombatFramework"))
 local CombatFrameworkR = getupvalues(CombatFramework)[2]
+local RigEvent = game:GetService("ReplicatedStorage").RigControllerEvent
+local AttackAnim = Instance.new("Animation")
+local AttackCoolDown = 0
 
-local function CancelCoolDown()
-    local ac = CombatFrameworkR.activeController
-    if ac and ac.equipped then
-        AttackCoolDown = tick() + (FireCooldown or 0.01) + ((FireL / MaxFire) * 0.3)
-        RigEven:FireServer("weaponChange", ac.currentWeaponModel.Name)
-        FireL = FireL + 1
-        fask.delay((FireCooldown or 0.01) + ((FireL + 0.3 / MaxFire) * 0.3), function()
-            FireL = FireL - 1
-        end)
-    end
-end
+-- Hàm kiểm tra và lấy mục tiêu trong phạm vi
+local function GetTargetsInRange(range)
+    local Hits = {}
+    local Player = game.Players.LocalPlayer
+    local Characters = game:GetService("Workspace").Characters:GetChildren()
+    local Enemies = game:GetService("Workspace").Enemies:GetChildren()
 
-local function AttackFunction(typef)
-    local ac = CombatFrameworkR.activeController
-    if ac and ac.equipped then
-        local bladehit = {}
-        if typef == 1 then
-            bladehit = getAllBladeHits(60)
-        elseif typef == 2 then
-            bladehit = getAllBladeHitsPlayers(65)
-        else
-            for _, v2 in pairs(getAllBladeHits(55)) do
-                table.insert(bladehit, v2)
-            end
-            for _, v3 in pairs(getAllBladeHitsPlayers(55)) do
-                table.insert(bladehit, v3)
+    -- Kiểm tra player
+    for _, char in pairs(Characters) do
+        local Humanoid = char:FindFirstChildOfClass("Humanoid")
+        if char.Name ~= Player.Name and Humanoid and Humanoid.RootPart and Humanoid.Health > 0 then
+            local Distance = (Humanoid.RootPart.Position - Player.Character.HumanoidRootPart.Position).Magnitude
+            if Distance <= range then
+                table.insert(Hits, Humanoid.RootPart)
             end
         end
-        if #bladehit > 0 then
+    end
+
+    -- Kiểm tra mob
+    for _, enemy in pairs(Enemies) do
+        local Humanoid = enemy:FindFirstChildOfClass("Humanoid")
+        if Humanoid and Humanoid.RootPart and Humanoid.Health > 0 then
+            local Distance = (Humanoid.RootPart.Position - Player.Character.HumanoidRootPart.Position).Magnitude
+            if Distance <= range then
+                table.insert(Hits, Humanoid.RootPart)
+            end
+        end
+    end
+
+    return Hits
+end
+
+-- Hàm tấn công nhanh
+local function PerformFastAttack()
+    local Controller = CombatFrameworkR.activeController
+    if Controller and Controller.equipped then
+        local Targets = GetTargetsInRange(HitboxRange)
+        if #Targets > 0 then
             if ClickNoCooldown then
-                ac.timeToNextAttack = 0  -- Loại bỏ thời gian cooldown giữa các đòn tấn công
+                Controller.timeToNextAttack = 0 -- Bỏ cooldown
             end
-            pcall(fask.spawn, ac.attack, ac)
-            if tick() > AttackCoolDown then
-                CancelCoolDown()
-            end
-            if tick() - cooldowntickFire > 0.3 then
-                ac.hitboxMagnitude = 60
-                pcall(fask.spawn, ac.attack, ac)
-                cooldowntickFire = tick()
-            end
-            local REALID = ac.anims.basic[3] or ac.anims.basic[2]
-            AttackAnim.AnimationId = REALID
-            local StartP = ac.humanoid:LoadAnimation(AttackAnim)
-            StartP:Play(0.01, 0.01, 0.01)
-            RigEven:FireServer("hit", bladehit, REALID and 3 or 2, "")
-            fask.delay(0.01, function()
-                StartP:Stop()
+            pcall(function()
+                RigEvent:FireServer("hit", Targets, 2, "")
             end)
         end
     end
 end
 
-local function CheckStun()
-    local character = game:GetService('Players').LocalPlayer.Character
-    return character:FindFirstChild("Stun") and character.Stun.Value ~= 0
-end
-
+-- Kích hoạt tự động tấn công
 spawn(function()
     while game:GetService("RunService").Stepped:Wait() do
-        local ac = CombatFrameworkR.activeController
-        if ac and ac.equipped and not CheckStun() then
-            if Fast_Attack then
-                pcall(AttackFunction, 1)
-            end
+        if Fast_Attack then
+            PerformFastAttack()
         end
     end
 end)
 
- local SelectFastAttackMode = "Taidz Fast"
-local SelectedFastAttackModes = {"Safe Attack", "Fast Attack", "Taidz Fast"}
-
-local function ChangeModeFastAttack(SelectFastAttackMode)
-    if SelectFastAttackMode == "Safe Attack" then
-        FireCooldown = 0.0009
-    elseif SelectFastAttackMode == "Fast Attack" then
-        FireCooldown = 0.00015
-    elseif SelectFastAttackMode == "Taidz Fast" then
-        FireCooldown = 0
+-- Toggle bật/tắt Click No Cooldown
+local UIS = game:GetService("UserInputService")
+UIS.InputBegan:Connect(function(input, processed)
+    if not processed and input.KeyCode == Enum.KeyCode.G then
+        ClickNoCooldown = not ClickNoCooldown
+        print("Click No Cooldown:", ClickNoCooldown and "Enabled" or "Disabled")
     end
-end
-
--- Dropdown để chọn chế độ tấn công nhanh
-local SelectedFastAttackModesDropdown = Tabs.Setting:AddDropdown("SelectedFastAttackModes", {
-    Title = "Select Fast Attack",
-    Values = SelectedFastAttackModes,
-    Multi = false,
-    Default = 3,
-})
-
-SelectedFastAttackModesDropdown:OnChanged(function(value)
-    SelectFastAttackMode = value
-    ChangeModeFastAttack(SelectFastAttackMode)
-
 end)
+
+print("Nhấn G để bật/tắt Click No Cooldown. Fast Attack luôn hoạt động.")
 
 -- Toggle để bật tắt tấn công nhanh
 local FASTAT = Tabs.Setting:AddToggle("Fast_Attack", {Title = "Fast Attack", Default = true})
@@ -3930,15 +3841,7 @@ Bat_V3:OnChanged(function(Value)
 end)
 Options.Bat_V3:SetValue(false)
 
-local Bat_V4 = Tabs.NguoiChoi:AddToggle("MyToggle", {Title = "Turn On V4", Default = true })
-        spawn(function()
-    while wait() do
-        pcall(function()
-            if V4 then
-                game:GetService("VirtualInputManager"):SendKeyEvent(true,"Y",false,game)
-                wait(0.1)
-                game:GetService("VirtualInputManager"):SendKeyEvent(false,"Y",false,game)
-end)
+
 ----pvp
  
 local StoreFr = Tabs.Fruit:AddToggle("StoreFr", {Title = "Auto Store Fruit", Description = "", Default = false })
