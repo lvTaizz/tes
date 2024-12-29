@@ -2505,6 +2505,14 @@ textButton.MouseButton1Click:Connect(function()
 end)
 ---UI
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local SoundService = game:GetService("SoundService")
+local TweenService = game:GetService("TweenService")
+
+local soundId = "rbxassetid://" 
+local sound = Instance.new("Sound")
+sound.Name = "ButtonClickSound"
+sound.SoundId = soundId
+sound.Parent = ReplicatedStorage
 
 local MainScreenGui = Instance.new("ScreenGui")
 local ButtonScreenGui = Instance.new("ScreenGui")
@@ -2522,26 +2530,26 @@ ImageButton.Parent = ButtonScreenGui
 ImageButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 ImageButton.BorderColor3 = Color3.fromRGB(0, 0, 0)
 ImageButton.BorderSizePixel = 0
-ImageButton.Position = UDim2.new(0.5, 10, 0, 10)
-ImageButton.AnchorPoint = Vector2.new(0.5, 0)
+ImageButton.Position = UDim2.new(0.5, 10, 0, 10) 
+ImageButton.AnchorPoint = Vector2.new(0.5, 0) 
 ImageButton.Size = UDim2.new(0, 40, 0, 40)
 ImageButton.Image = "rbxassetid://104450799419041"
 
-UICorner.CornerRadius = UDim.new(1, 0)
+UICorner.CornerRadius = UDim.new(1, 0) 
 UICorner.Parent = ImageButton
 
 UIStroke.Color = Color3.fromRGB(75, 0, 130)
 UIStroke.Parent = ImageButton
 
--- Hiệu ứng đổi màu liên tục cho UIStroke
+-- Thêm phần thay đổi màu RGB liên tục cho UIStroke
 local colors = {
-    Color3.fromRGB(255, 0, 0),    -- Đỏ
+    Color3.fromRGB(255, 0, 0),   -- Đỏ
     Color3.fromRGB(255, 165, 0), -- Cam
     Color3.fromRGB(255, 255, 0), -- Vàng
-    Color3.fromRGB(3, 252, 40),  -- Xanh lá
+    Color3.fromRGB(3, 252, 40),   -- Xanh lá
     Color3.fromRGB(0, 0, 255),   -- Xanh dương
     Color3.fromRGB(75, 0, 130),  -- Chàm
-    Color3.fromRGB(23, 255, 224) -- Tím
+    Color3.fromRGB(23, 255, 224)-- Tím
 }
 
 local index = 1
@@ -2549,51 +2557,34 @@ local index = 1
 spawn(function()
     while true do
         UIStroke.Color = colors[index]
-        index = index % #colors + 1
-        wait(0.5)
+        index = index % #colors + 1 
+        wait(0.5) 
     end
 end)
 
--- Hàm bật/tắt giao diện chính
 local function toggleUI()
     MainScreenGui.Enabled = not MainScreenGui.Enabled
 end
 
--- Sự kiện nhấn nút
 ImageButton.MouseButton1Click:Connect(function()
-    toggleUI()
+    
+    local goal = {Rotation = 0} 
+    local tweenInfo = TweenInfo.new(1, Enum.EasingStyle.Back) 
+    local tween = TweenService:Create(ImageButton, tweenInfo, goal)
+
+    tween:Play()
+    tween.Completed:Connect(function()
+        ImageButton.Rotation = 0 
+        toggleUI() 
+    end)
+
+    local clickSound = sound:Clone()
+    clickSound.Parent = SoundService
+    clickSound:Play()
+    
+    game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.LeftControl, false, game)
 end)
 
--- Thêm chức năng kéo-thả cho ImageButton
-local dragging = false
-local dragStart = nil
-local startPos = nil
-
-ImageButton.InputBegan:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseButton1 then
-        dragging = true
-        dragStart = input.Position
-        startPos = ImageButton.Position
-    end
-end)
-
-ImageButton.InputChanged:Connect(function(input)
-    if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
-        local delta = input.Position - dragStart
-        ImageButton.Position = UDim2.new(
-            startPos.X.Scale,
-            startPos.X.Offset + delta.X,
-            startPos.Y.Scale,
-            startPos.Y.Offset + delta.Y
-        )
-    end
-end)
-
-ImageButton.InputEnded:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseButton1 then
-        dragging = false
-    end
-end)
 
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
