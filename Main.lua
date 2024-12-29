@@ -2559,12 +2559,12 @@ local function toggleUI()
     MainScreenGui.Enabled = not MainScreenGui.Enabled
 end
 
--- Sự kiện nhấn nút: chỉ bật/tắt giao diện
+-- Sự kiện nhấn nút
 ImageButton.MouseButton1Click:Connect(function()
     toggleUI()
 end)
 
--- Chức năng kéo-thả cho ImageButton
+-- Thêm chức năng kéo-thả cho ImageButton
 local dragging = false
 local dragStart = nil
 local startPos = nil
@@ -2601,7 +2601,7 @@ local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.
 local Window = Fluent:CreateWindow({
     Title = "Happy Cat hub|BF",
     SubTitle = " By Taidz",
-    TabWidth = 100,
+    TabWidth = 60,
     Size = UDim2.fromOffset(530, 350),
     Acrylic = false, -- The blur may be detectable, setting this to false disables blur entirely
     Theme = "Dark",
