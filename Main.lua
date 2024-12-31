@@ -1,6 +1,3 @@
-repeat task.wait() until game.Players
-repeat task.wait() until game.Players.LocalPlayer
-
 if game.PlaceId == 2753915549 then
 	sea1 = true
 elseif game.PlaceId == 4442272183 then
