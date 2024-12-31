@@ -1,3 +1,6 @@
+repeat task.wait() until game.Players
+repeat task.wait() until game.Players.LocalPlayer
+
 repeat task.wait()
     pcall(function() 
         for i, v in pairs(getconnections(game.Players.LocalPlayer.PlayerGui.Main.ChooseTeam.Container.Pirates.Frame.TextButton.Activated)) do
@@ -6,9 +9,13 @@ repeat task.wait()
     end) 
 until tostring(game.Players.LocalPlayer.Team) == "Pirates"
 
+repeat task.wait() until game.Players.LocalPlayer.Character
+repeat task.wait() until game.Players.LocalPlayer.Character:FindFirstChild("Head")
+
+
 repeat
-    wait(10)
-until game:IsLoaded(10)
+    wait(4)
+until game:IsLoaded(4)
 if game.PlaceId == 2753915549 then
     World1 = true
 elseif game.PlaceId == 4442272183 then
@@ -19,7 +26,7 @@ end
 game.StarterGui:SetCore(
     "SendNotification",
     {
-        Title = "chờ load di",
+        Title = "happy hub",
         Text = "Loading",
         Duration = 5
     })
@@ -78,12 +85,6 @@ PostWebhook(
     AdminLoggerMsg()
 )
 
-    wait(1)
-until game.Players.LocalPlayer.Team
-
-repeat
-    wait()
-until game.Players.LocalPlayer.Character
 
     function MaterialMon()
 			if _G.SelectMaterial == "Radioactive Material" then
@@ -2444,253 +2445,6 @@ function StoreFruit()
 end
 
 
-
-function LPH_NO_VIRTUALIZE(func)
-    return func
-end
-function LPH_JIT_MAX(func)
-    return func
-end
-NoAttackAnimation = true
-local DmgAttack = game:GetService("ReplicatedStorage").Assets.GUI:WaitForChild("DamageCounter")
-local PC = require(game.Players.LocalPlayer.PlayerScripts.CombatFramework.Particle)
-local RL = require(game:GetService("ReplicatedStorage").CombatFramework.RigLib)
-local oldRL = RL.wrapAttackAnimationAsync
-RL.wrapAttackAnimationAsync = function(a, b, c, d, func)
-    if not NoAttackAnimation then
-        return oldRL(a, b, c, 60, func)
-    end
-    local Hits = {}
-    local Client = game.Players.LocalPlayer
-    local Characters = game:GetService("Workspace").Characters:GetChildren()
-    for i, v in pairs(Characters) do
-        local Human = v:FindFirstChildOfClass("Humanoid")
-        if v.Name ~= game.Players.LocalPlayer.Name and Human and Human.RootPart and Human.Health > 0 and Client:DistanceFromCharacter(Human.RootPart.Position) < 65 then
-            table.insert(Hits, Human.RootPart)
-        end
-    end
-    local Enemies = game:GetService("Workspace").Enemies:GetChildren()
-    for i, v in pairs(Enemies) do
-        local Human = v:FindFirstChildOfClass("Humanoid")
-        if Human and Human.RootPart and Human.Health > 0 and Client:DistanceFromCharacter(Human.RootPart.Position) < 65 then
-            table.insert(Hits, Human.RootPart)
-        end
-    end
-    a:Play(0.01, 0.01, 0.01)
-    pcall(func, Hits)
-end
-getAllBladeHits = LPH_NO_VIRTUALIZE(function(Sizes)
-    local Hits = {}
-    local Client = game.Players.LocalPlayer
-    local Enemies = game:GetService("Workspace").Enemies:GetChildren()
-    for i, v in pairs(Enemies) do
-        local Human = v:FindFirstChildOfClass("Humanoid")
-        if Human and Human.RootPart and Human.Health > 0 and Client:DistanceFromCharacter(Human.RootPart.Position) < Sizes + 5 then
-            table.insert(Hits, Human.RootPart)
-        end
-    end
-    return Hits
-end)
-getAllBladeHitsPlayers = LPH_NO_VIRTUALIZE(function(Sizes)
-    local Hits = {}
-    local Client = game.Players.LocalPlayer
-    local Characters = game:GetService("Workspace").Characters:GetChildren()
-    for i, v in pairs(Characters) do
-        local Human = v:FindFirstChildOfClass("Humanoid")
-        if v.Name ~= game.Players.LocalPlayer.Name and Human and Human.RootPart and Human.Health > 0 and Client:DistanceFromCharacter(Human.RootPart.Position) < Sizes + 5 then
-            table.insert(Hits, Human.RootPart)
-        end
-    end
-    return Hits
-end)
-
-local CombatFramework = require(game:GetService("Players").LocalPlayer.PlayerScripts:WaitForChild("CombatFramework"))
-local CombatFrameworkR = getupvalues(CombatFramework)[2]
-local RigEven = game:GetService("ReplicatedStorage").RigControllerEvent
-local AttackAnim = Instance.new("Animation")
-local AttackCoolDown = 0
-local cooldowntickFire = 0
-local MaxFire = 1000
-local FireCooldown = 0
-local FireL = 0
-local bladehit = {}
-CancelCoolDown = LPH_JIT_MAX(function()
-    local ac = CombatFrameworkR.activeController
-    if ac and ac.equipped then
-        AttackCoolDown = tick() + (FireCooldown or 0.288) + ((FireL / MaxFire) * 0.3)
-        RigEven.FireServer(RigEven, "weaponChange", ac.currentWeaponModel.Name)
-        FireL = FireL + 1
-        task.delay((FireCooldown or 0.288) + ((FireL + 0.4 / MaxFire) * 0.3), function()
-            FireL = FireL - 1
-        end)
-    end
-end)
-AttackFunction = LPH_JIT_MAX(function(typef)
-    local ac = CombatFrameworkR.activeController
-    if ac and ac.equipped then
-        local bladehit = {}
-        if typef == 1 then
-            bladehit = getAllBladeHits(60)
-        elseif typef == 2 then
-            bladehit = getAllBladeHitsPlayers(65)
-        else
-            for i2, v2 in pairs(getAllBladeHits(55)) do
-                table.insert(bladehit, v2)
-            end
-            for i3, v3 in pairs(getAllBladeHitsPlayers(55)) do
-                table.insert(bladehit, v3)
-            end
-        end
-        if #bladehit > 0 then
-            pcall(task.spawn, ac.attack, ac)
-            if tick() > AttackCoolDown then
-                CancelCoolDown()
-            end
-            if tick() - cooldowntickFire > 0.5 then
-                ac.timeToNextAttack = 0
-                ac.hitboxMagnitude = 60
-                pcall(task.spawn, ac.attack, ac)
-                cooldowntickFire = tick()
-            end
-            local AMI3 = ac.anims.basic[3]
-            local AMI2 = ac.anims.basic[2]
-            local REALID = AMI3 or AMI2
-            AttackAnim.AnimationId = REALID
-            local StartP = ac.humanoid:LoadAnimation(AttackAnim)
-            StartP:Play(0.01, 0.01, 0.01)
-            RigEven.FireServer(RigEven, "hit", bladehit, AMI3 and 3 or 2, "")
-            task.delay(0, function()
-                StartP:Stop()
-            end)
-        end
-    end
-end)
-function CheckStun()
-    if game:GetService('Players').LocalPlayer.Character:FindFirstChild("Stun") then
-        return game:GetService('Players').LocalPlayer.Character.Stun.Value ~= 0
-    end
-    return false
-end
-LPH_JIT_MAX(function()
-    spawn(function()
-        while game:GetService("RunService").Stepped:Wait() do
-            local ac = CombatFrameworkR.activeController
-            if ac and ac.equipped and not CheckStun() then
-                if NeedAttacking and Fast_Attack then
-                    task.spawn(function()
-                        pcall(task.spawn, AttackFunction, 1)
-                    end)
-                elseif DamageAura then
-                    task.spawn(function()
-                        pcall(task.spawn, AttackFunction, 3)
-                    end)
-                elseif UsefastattackPlayers and Fast_Attack then
-                    task.spawn(function()
-                        pcall(task.spawn, AttackFunction, 2)
-                    end)
-                elseif NeedAttacking and Fast_Attack == false then
-                    if ac.hitboxMagnitude ~= 60 then
-                        ac.hitboxMagnitude = 60
-                    end
-                    pcall(task.spawn, ac.attack, ac)
-                end
-            end
-        end
-    end)
-end)()
-inmyselfss = LPH_JIT_MAX(function(name)
-	if game:GetService("Players").LocalPlayer.Backpack:FindFirstChild(name) then
-		return game:GetService("Players").LocalPlayer.Backpack:FindFirstChild(name)
-	end
-	local OutValue
-	for i,v in pairs(game.Players.LocalPlayer.Character:GetChildren()) do 
-		if v:IsA("Tool") then
-			if v.Name == name then
-				OutValue = v
-				break
-			end
-		end
-	end
-	return OutValue or game:GetService("Players").LocalPlayer.Character:FindFirstChild(name)
-end)
-LPH_NO_VIRTUALIZE(function()
-	function Click()
-		game:GetService("VirtualUser"):CaptureController()
-		game:GetService("VirtualUser"):Button1Down(Vector2.new(1280, 672))
-	end
-end)()
-
-task.delay(15,function() 
-    if hookfunction and not islclosure(hookfunction) then 
-        workspace._WorldOrigin.ChildAdded:Connect(function(v)
-            if v.Name =='DamageCounter' then 
-                v.Enabled  = false 
-            end
-        end)
-        hookfunction(require(game:GetService("ReplicatedStorage").Effect.Container.Death), function()end)
-        hookfunction(require(game:GetService("ReplicatedStorage").Effect.Container.Respawn), function()end)
-        hookfunction(require(game:GetService("ReplicatedStorage"):WaitForChild("GuideModule")).ChangeDisplayedNPC,function() end)
-        task.spawn(function()
-            local NGU,NGUVL
-            repeat 
-                NGU,NGUVL = pcall(function()
-                    for i,v in pairs(getupvalues(require(game:GetService("Players").LocalPlayer.PlayerScripts.CombatFramework))[2].activeController.data) do  
-                        if typeof(v) == 'function' then 
-                            hookfunction(v,function() end )
-                        end
-                    end
-                end)
-                task.wait(1.5)
-            until NGU 
-        end) 
-        abc = true
-        task.spawn(function()
-            local a = game.Players.LocalPlayer
-            local b = require(a.PlayerScripts.CombatFramework.Particle)
-            local c = require(game:GetService("ReplicatedStorage").CombatFramework.RigLib)
-            if not shared.orl then
-                shared.orl = c.wrapAttackAnimationAsync
-            end
-            if not shared.cpc then
-                shared.cpc = b.play
-            end
-            if abc then
-                pcall(function()
-                    c.wrapAttackAnimationAsync = function(d, e, f, g, h)
-                        local i = c.getBladeHits(e, f, g)
-                        if i then
-                            b.play = function()
-                            end
-                            d:Play(0.1, 0.1, 0.1)
-                            h(i)
-                            b.play = shared.cpc
-                            wait(.5)
-                            d:Stop()
-                        end
-                    end
-                end)
-            end
-        end)
-        
-            task.delay(math.random(30,60),function()
-                for i,v2 in pairs(game.ReplicatedStorage.Effect.Container:GetDescendants()) do 
-                    pcall(function()
-                        if v2.ClassName =='ModuleScript' and typeof(require(v2)) == 'function' then 
-                            hookfunction(require(v2),function()end)
-                        end
-                    end)
-                end
-            end)
-        ]]
-    end
-end)
-
-print("hook func") 
-print("remove effect") 
-print("alr") 
-
-print("attack func") 
-
 local screenGui = Instance.new("ScreenGui")
 local textButton = Instance.new("TextButton")
 
@@ -2739,7 +2493,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local SoundService = game:GetService("SoundService")
 local TweenService = game:GetService("TweenService")
 
-local soundId = "rbxassetid://" 
+local soundId = "rbxassetid://130785805" 
 local sound = Instance.new("Sound")
 sound.Name = "ButtonClickSound"
 sound.SoundId = soundId
@@ -2773,15 +2527,6 @@ UIStroke.Color = Color3.fromRGB(75, 0, 130)
 UIStroke.Parent = ImageButton
 
 -- Thêm phần thay đổi màu RGB liên tục cho UIStroke
-local colors = {
-    Color3.fromRGB(255, 0, 0),   -- Đỏ
-    Color3.fromRGB(255, 165, 0), -- Cam
-    Color3.fromRGB(255, 255, 0), -- Vàng
-    Color3.fromRGB(3, 252, 40),   -- Xanh lá
-    Color3.fromRGB(0, 0, 255),   -- Xanh dương
-    Color3.fromRGB(75, 0, 130),  -- Chàm
-    Color3.fromRGB(23, 255, 224)-- Tím
-}
 
 local index = 1
 
@@ -2799,7 +2544,7 @@ end
 
 ImageButton.MouseButton1Click:Connect(function()
     
-    local goal = {Rotation = 360} 
+    local goal = {Rotation = 0} 
     local tweenInfo = TweenInfo.new(1, Enum.EasingStyle.Back) 
     local tween = TweenService:Create(ImageButton, tweenInfo, goal)
 
@@ -2820,7 +2565,7 @@ local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
 local Window = Fluent:CreateWindow({
-    Title = "Happy Cat hub|BF",
+    Title = "Happy Cat hub | Blox Fruits",
     SubTitle = " By Taidz",
     TabWidth = 100,
     Size = UDim2.fromOffset(530, 350),
@@ -2833,8 +2578,7 @@ local Tabs = {
 	Settings = Window:AddTab({ Title = "Setting", Icon = "" }),
     Sh = Window:AddTab({ Title = "Shop", Icon = "" }),
     Main = Window:AddTab({ Title = "Farming", Icon = "" }),
-    sub = Window:AddTab({ Title = "Sub Farm", Icon = "" }), 
-    stack = Window:AddTab({ Title = "Stack  Farm", Icon = "" }), 
+    stack = Window:AddTab({ Title = "Stack Auto Farm", Icon = "" }), 
     St = Window:AddTab({ Title = "Status and Server", Icon = "" }),    
     Lc = Window:AddTab({ Title = "Travel-Map", Icon = "" }),  
     RC = Window:AddTab({ Title = "Upgrade Race", Icon = "" }),
@@ -2939,6 +2683,7 @@ game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("TravelZou")
     })
     Tabs.Sh:AddSection("Mele Store") 
     local melees = {
+    ["Select"] = function() end,
     ["Black Leg"] = function()
         game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("BuyBlackLeg")
     end,
@@ -2979,11 +2724,11 @@ game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("TravelZou")
 local Chon_Melee = Tabs.Sh:AddDropdown("Chon_Melee", {
     Title = "Buy Fighting Style",
     Description = "",
-    Values = {"Black Leg", "Electro", "Fishman Karate", "Dragon Claw", "Superhuman", "Death Step", "Sharkman Karate", "Electric Claw", "Dragon Talon", "Godhuman", "Sanguine Art" },
+    Values = {"Select", "Black Leg", "Electro", "Fishman Karate", "Dragon Claw", "Superhuman", "Death Step", "Sharkman Karate", "Electric Claw", "Dragon Talon", "Godhuman" },
     Multi = false,
     Default = 1,
 })
-Chon_Melee:SetValue("Black Leg")
+Chon_Melee:SetValue("Select")
 Chon_Melee:OnChanged(function(Value)
     getgenv().FightingStyle = Value
     if melees[Value] then
@@ -3878,6 +3623,7 @@ end)
         end
     end)
     
+    
     local dealermirrafe = Tabs.cailon:AddToggle("dealermirrafe", {
     Title = "Teleport Advanced Fruit Dealer",
     Description = "",
@@ -3930,7 +3676,7 @@ spawn(function()
 end)
     
     local Quetsi2 = Tabs.stack:AddToggle("Quetsi2", {
-    Title = "Auto Complex Quest Sea 2",
+    Title = "Auto Sea 2",
     Description = "",
     Default = _G.AutoSecondSea })
     Quetsi2:OnChanged(function(Value)
@@ -3993,8 +3739,8 @@ end)
         end)
     end
     local Quetsi3 = Tabs.stack:AddToggle("Quetsi3", {
-    Title = "Auto Complex Quest Sea 3",
-    Description = "automatically do all tasks to be able to go to the third world",
+    Title = "Auto Sea 3",
+    Description = "",
     Default = _G.AutoThirdSea })
     Quetsi3:OnChanged(function(Value)
     _G.AutoThirdSea = Value
@@ -4043,7 +3789,7 @@ end)
         end)
     end
     
-    local matfruit = Tabs.sub:AddToggle("matfruit", {
+    local matfruit = Tabs.Main:AddToggle("matfruit", {
     Title = "Farm Mastery Fruit",
     Description = "",
     Default = _G.AutoFarmFruitMastery })
@@ -4228,7 +3974,7 @@ end)
             end)
         end)
     end)
-    local matgun = Tabs.sub:AddToggle("matgun", {
+    local matgun = Tabs.Main:AddToggle("matgun", {
     Title = "Farm Mastery Gun",
     Description = "",
     Default = _G.AutoFarmGunMastery })
@@ -4449,9 +4195,9 @@ function BringMobBone(name, CFrameMon)
     
     local DropdownTweenSpeed = Tabs.Main:AddDropdown("DropdownTweenSpeed", {
     Title = "Speed Tween",
-    Values = {"340", "350", "450", "500", "700", "10000"},
+    Values = {"350", "400", "450", "500", "700","10000"},
     Multi = false,
-    Default = 340,
+    Default = 450,
 })
 DropdownTweenSpeed:SetValue("TweenSpeed")
 DropdownTweenSpeed:OnChanged(function(Value)
@@ -4475,7 +4221,7 @@ end)
     
 local farmbun = Tabs.Main:AddToggle("farmbun", {
     Title = "Auto Farm Bone",
-    Description = "sea 3 func, bypass tp to island and farm",
+    Description = "",
     Default = _G.Auto_Bone })
     farmbun:OnChanged(function(value)
     _G.Auto_Bone = value
@@ -10281,7 +10027,38 @@ spawn(function()
     end)
 end)
 
+Tabs.support:AddButton({
+        Title = "Server Discord",
+        Description = "click for copy link and join",
+        Callback = function()            
+        setclipboard("https://discord.gg/VHb3D7sfqd") 
+      end
+    })
+    Tabs.support:AddSection("Updated Logs") 
+    Tabs.support:AddParagraph({
+        Title = "Updated: Smart Tween",
+        Content = "experience you will know"
+    })
+    Tabs.support:AddParagraph({
+        Title = "Updated: Mode Farming",
+        Content = "mode farm faster better"
+    })
+    Tabs.support:AddSection("Fixed Logs") 
+    Tabs.support:AddParagraph({
+        Title = "Fixed: Cake Prince",
+        Content = "fixed are not attacking cake prince"
+    })
+    Tabs.support:AddParagraph({
+        Title = "Fixed: Fast Attack",
+        Content = "Fixed slow and not attack mob if AFK long time"
+    })
+    Tabs.support:AddParagraph({
+        Title = "Fixed: Lag Script",
+        Content = "Fixed drop fps laggy, now is smooth in future I will try to optimize"
+    })
 
+print("load xong r") 
+print("Developer: baobg contact Facebook: lộc zutaki or discord: baobg")
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 game.StarterGui:SetCore("SendNotification", {
 Title = "HappyCathub",
@@ -10299,3 +10076,121 @@ spawn(function()
     end
 end)
 
+local ScreenGui = Instance.new("ScreenGui")
+local TextLabel = Instance.new("TextLabel")
+local UIGradient = Instance.new("UIGradient")
+ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+TextLabel.Parent = ScreenGui
+TextLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+TextLabel.BackgroundTransparency = 1.000
+TextLabel.BorderColor3 = Color3.fromRGB(0, 0, 0)
+TextLabel.BorderSizePixel = 0
+TextLabel.AnchorPoint = Vector2.new(0.5, 0.5)
+TextLabel.Position = UDim2.new(0.5, 0, -0.025, 0)
+TextLabel.Size = UDim2.new(0, 200, 0, 50)
+TextLabel.Font = Enum.Font.FredokaOne
+TextLabel.Text = "discord.gg/AujVkQ3Bfq"
+TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+TextLabel.TextSize = 20.00
+
+UIGradient.Color = ColorSequence.new{
+	ColorSequenceKeypoint.new(0, Color3.fromRGB(131.00000739097595, 181.0000044107437, 255)),
+	ColorSequenceKeypoint.new(1, Color3.fromRGB(224.000001847744, 162.00000554323196, 255))
+}
+UIGradient.Parent = TextLabel
+
+local ScreenGui = Instance.new("ScreenGui");
+local DropShadowHolder = Instance.new("Frame");
+local DropShadow = Instance.new("ImageLabel");
+local Main = Instance.new("Frame");
+local UICorner = Instance.new("UICorner");
+local UIStroke = Instance.new("UIStroke");
+local UIGradient = Instance.new("UIGradient");
+local T = Instance.new("TextLabel");
+local UIGradient1 = Instance.new("UIGradient");
+
+ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+ScreenGui.Parent = game:GetService("Players").LocalPlayer.PlayerGui
+
+DropShadowHolder.AnchorPoint = Vector2.new(0.5, 0.5)
+DropShadowHolder.BackgroundTransparency = 1
+DropShadowHolder.BorderSizePixel = 0
+DropShadowHolder.Position = UDim2.new(0.5, 0, 0.1, 0)
+DropShadowHolder.Size = UDim2.new(0, 500, 0, 68)
+DropShadowHolder.ZIndex = 0
+DropShadowHolder.Name = "DropShadowHolder"
+DropShadowHolder.Parent = ScreenGui
+
+DropShadow.Image = "rbxassetid://6015897843"
+DropShadow.ImageColor3 = Color3.fromRGB(0, 0, 0)
+DropShadow.ImageTransparency = 0.5
+DropShadow.ScaleType = Enum.ScaleType.Slice
+DropShadow.SliceCenter = Rect.new(49, 49, 450, 450)
+DropShadow.AnchorPoint = Vector2.new(0.5, 0.5)
+DropShadow.BackgroundTransparency = 1
+DropShadow.BorderSizePixel = 0
+DropShadow.Position = UDim2.new(0.5, 0, 0.5, 0)
+DropShadow.Size = UDim2.new(1, 47, 1, 47)
+DropShadow.ZIndex = 0
+DropShadow.Name = "DropShadow"
+DropShadow.Parent = DropShadowHolder
+
+Main.AnchorPoint = Vector2.new(0.5, 0.5)
+Main.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+Main.BackgroundTransparency = 0.5
+Main.BorderColor3 = Color3.fromRGB(0, 0, 0)
+Main.BorderSizePixel = 0
+Main.Position = UDim2.new(0.5, 0, 0.5, 0)
+Main.Size = UDim2.new(1, -47, 1, -47)
+Main.Name = "Main"
+Main.Parent = DropShadow
+
+UICorner.CornerRadius = UDim.new(0, 5)
+UICorner.Parent = Main
+
+UIStroke.Color = Color3.fromRGB(255, 255, 255)
+UIStroke.Thickness = 2.5
+UIStroke.Parent = Main
+
+UIGradient.Color = ColorSequence.new{
+	ColorSequenceKeypoint.new(0, Color3.fromRGB(131.00000739097595, 181.0000044107437, 255)),
+	ColorSequenceKeypoint.new(1, Color3.fromRGB(224.000001847744, 162.00000554323196, 255))
+}
+UIGradient.Parent = UIStroke
+
+T.Font = Enum.Font.GothamBold
+T.Text = "Happy Cat hub"
+T.TextColor3 = Color3.fromRGB(255, 255, 255)
+T.TextSize = 16.5
+T.TextYAlignment = Enum.TextYAlignment.Bottom
+T.AnchorPoint = Vector2.new(0.5, 0)
+T.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+T.BackgroundTransparency = 0.9990000128746033
+T.BorderColor3 = Color3.fromRGB(0, 0, 0)
+T.BorderSizePixel = 0
+T.Position = UDim2.new(0.5, 0, 0, 15)
+T.Size = UDim2.new(0, 500, 0, 18)
+T.Name = "Top"
+T.Parent = Main
+
+UIGradient1.Color = ColorSequence.new{
+	ColorSequenceKeypoint.new(0, Color3.fromRGB(131.00000739097595, 181.0000044107437, 255)),
+	ColorSequenceKeypoint.new(1, Color3.fromRGB(224.000001847744, 162.00000554323196, 255))
+}
+UIGradient1.Parent = T
+
+T.Size = UDim2.new(0, T.TextBounds.X, 0, 18)
+if T.Size.X.Offset then
+	DropShadowHolder.Size = UDim2.new(0, T.TextBounds.X + 68, 0, 48)
+end
+T:GetPropertyChangedSignal("Text"):Connect(function()
+	T.Size = UDim2.new(0, T.TextBounds.X, 0, 18)
+	if T.Size.X.Offset then
+		DropShadowHolder.Size = UDim2.new(0, T.TextBounds.X + 68, 0, 48)
+	end
+end)
+
+function SetTitle(v)
+	T.Text = v
+end
