@@ -8,9 +8,19 @@ repeat task.wait()
     end) 
 until tostring(game.Players.LocalPlayer.Team) == "Pirates"
 
+if game.PlaceId == 2753915549 then
+	sea1 = true
 
-local id = game.PlaceId
-if id == 2753915549 then First_Sea = true; elseif id == 4442272183 then Second_Sea = true; elseif id == 7449423635 then Third_Sea = true; else game.Players.LocalPlayer:Kick("Check script here : https://discord.gg/kuXFw2HkdN") end;
+elseif game.PlaceId == 4442272183 then
+     sea2 = true
+
+elseif game.PlaceId == 7449423635 then
+	sea3 = true
+
+else
+	game:GetService("Players").LocalPlayer:Kick("check game support")
+
+end
 game.StarterGui:SetCore(
     "SendNotification",
     {
