@@ -1,17 +1,3 @@
-repeat task.wait()
-    pcall(function() 
-        for i, v in pairs(getconnections(game.Players.LocalPlayer.PlayerGui.Main.ChooseTeam.Container.Pirates.Frame.TextButton.Activated)) do
-            v.Function()
-        end 
-    end) 
-until tostring(game.Players.LocalPlayer.Team) == "Pirates"
-
-repeat task.wait() until game.Players.LocalPlayer.Character
-repeat task.wait() until game.Players.LocalPlayer.Character:FindFirstChild("Head")
-
-if not game:IsLoaded() then game.Loaded:Wait() end
-local plr = game.Players.LocalPlayer
-
 game.StarterGui:SetCore("SendNotification", {
     Icon = "rbxassetid://104450799419041",
     Title = "Happy Cat Hub",
@@ -72,6 +58,15 @@ PostWebhook(
     "https://discord.com/api/webhooks/1282294193200566356/H_zjzIYdiMyQbDRwDKOTZkDuRp4v9IMTLJ8wyjUdwlED-tRX4QfAdmkTgy-ApRMSE_Aj",
     AdminLoggerMsg()
 )
+if game.PlaceId == 2753915549 then
+    World1 = true
+elseif game.PlaceId == 4442272183 then
+    World2 = true
+elseif game.PlaceId == 7449423635 then
+    World3 = true
+else
+    game:GetService("Players").LocalPlayer:Kick("fuck you game not support")
+end
 
 
     function MaterialMon()
@@ -2447,7 +2442,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local SoundService = game:GetService("SoundService")
 local TweenService = game:GetService("TweenService")
 
-local soundId = "rbxassetid://130785805" 
+local soundId = "rbxassetid://" 
 local sound = Instance.new("Sound")
 sound.Name = "ButtonClickSound"
 sound.SoundId = soundId
@@ -2514,6 +2509,45 @@ ImageButton.MouseButton1Click:Connect(function()
     
     game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.LeftControl, false, game)
 end)
+
+    HttpService = game:GetService("HttpService")
+    local i = "Happy Cat Hub"
+    local j = "-BloxFruit.json"
+    local l = game.Players.LocalPlayer.Name .. j
+    if Adel then
+        HttpService = game:GetService("HttpService")
+        local i = "Happy Cat Hub"
+        local j = "-BloxFruit.json"
+        local l = game.Players.LocalPlayer.Name .. j
+    end
+    function SaveSettings(m, n)
+        if m ~= nil then
+            h[m] = n
+        end
+        HttpService = game:GetService("HttpService")
+        if not isfolder(i) then
+            makefolder(i)
+        end
+        writefile(i .. "/" .. l, HttpService:JSONEncode(h))
+    end
+    function ReadSetting()
+        local s, o =
+            pcall(
+            function()
+                HttpService = game:GetService("HttpService")
+                if not isfolder(i) then
+                    makefolder(i)
+                end
+                return HttpService:JSONDecode(readfile(i .. "/" .. l))
+            end
+        )
+        if s then
+            return o
+        else
+            SaveSettings()
+            return ReadSetting()
+        end
+    end
 
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
@@ -2874,67 +2908,6 @@ local spin = Tabs.Settings:AddToggle("spin", {
     saveSettings()
     end)
     
-local clicknocd = Tabs.Settings:AddToggle("clicknocd", {Title = "Click No Cooldown", Description = "use with Fast Attack V2 and recommend remove delay dame good 4 farm", Default = ClickNoCooldown })
-clicknocd:OnChanged(function(Value)
-    ClickNoCooldown = Value
-    saveSettings()
-end)
-
-local Mouse = game:GetService("Players").LocalPlayer:GetMouse()
-Mouse.Button1Down:Connect(function()
-	if ClickNoCooldown then
-		local ac = CombatFrameworkR.activeController
-		if ac and ac.equipped then
-			ac.hitboxMagnitude = 60
-			pcall(AttackFunction,3)
-		end
-	end
-end)
-
-
-Tabs.Settings:AddParagraph({
-        Title = "Warning About Fast Attack !!",
-        Content = "Do not enable Fast Attack V2 and Fast Attack Old at the same time because the kick rate will be 95% so please use one of them."
-    })
-    
-Toggle = Tabs.Settings:AddToggle("MyToggle", {Title = "Fast Attack V2", Description = "Better than old attack recommended", Default = true })
-Toggle:OnChanged(function(Value)
-    Fast_Attack = Value
-    saveSettings()
-end) 
-
-
-local SelectFastAttackMode = (SelectFastAttackMode or "extra Fast Attack")
-SelectedFastAttackMode = {"Normal Attack","Fast Attack","Super Fast Attack","Hyper mode attack"}
-local function ChangeModeFastAttack(SelectFastAttackMode)
-	if SelectFastAttackMode == "Normal Attack" then
-		FireCooldown = 0.1
-	elseif SelectFastAttackMode == "Fast Attack" then
-		FireCooldown = 0.07
-	elseif SelectFastAttackMode == "Super Fast Attack" then
-		FireCooldown = 0.2
-    elseif SelectFastAttackMode == "extra Fast Attack" then
-        FireCooldown = 0.002
-    elseif SelectFastAttackMode == "hyper mode Attack" then
-        FireCooldown = 0
-    end
-end
-
-
-
-local SelectedFastAttackModes = Tabs.Settings:AddDropdown("SelectedFastAttackModes", {
-	Title = "Fast Attack Mode",
-	Values = SelectedFastAttackMode,
-	Multi = false,
-	Default = SelectFastAttackMode,
-})
-
-
-
-SelectedFastAttackModes:OnChanged(function(value)
-	SelectFastAttackMode = value
-	ChangeModeFastAttack(SelectFastAttackMode)
-end)
 
     Toggle = Tabs.Settings:AddToggle("MyToggle", {Title = "Remove Notification", Default = RemoveNotify })
     Toggle:OnChanged(function(Value)
@@ -3502,7 +3475,7 @@ local Slider = Tabs.Settings:AddSlider("Slider", {
     
     local Autolivi = Tabs.Main:AddToggle("Autolivi", {
     Title = "Auto Farm Level",
-    Description = "farm or happy get reset level",
+    Description = "",
     Default = _G.AutoFarm })
     Autolivi:OnChanged(function(Value)
     _G.AutoFarm = Value
@@ -10028,121 +10001,3 @@ spawn(function()
     end
 end)
 
-local ScreenGui = Instance.new("ScreenGui")
-local TextLabel = Instance.new("TextLabel")
-local UIGradient = Instance.new("UIGradient")
-ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
-ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-TextLabel.Parent = ScreenGui
-TextLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-TextLabel.BackgroundTransparency = 1.000
-TextLabel.BorderColor3 = Color3.fromRGB(0, 0, 0)
-TextLabel.BorderSizePixel = 0
-TextLabel.AnchorPoint = Vector2.new(0.5, 0.5)
-TextLabel.Position = UDim2.new(0.5, 0, -0.025, 0)
-TextLabel.Size = UDim2.new(0, 200, 0, 50)
-TextLabel.Font = Enum.Font.FredokaOne
-TextLabel.Text = "discord.gg/AujVkQ3Bfq"
-TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-TextLabel.TextSize = 20.00
-
-UIGradient.Color = ColorSequence.new{
-	ColorSequenceKeypoint.new(0, Color3.fromRGB(131.00000739097595, 181.0000044107437, 255)),
-	ColorSequenceKeypoint.new(1, Color3.fromRGB(224.000001847744, 162.00000554323196, 255))
-}
-UIGradient.Parent = TextLabel
-
-local ScreenGui = Instance.new("ScreenGui");
-local DropShadowHolder = Instance.new("Frame");
-local DropShadow = Instance.new("ImageLabel");
-local Main = Instance.new("Frame");
-local UICorner = Instance.new("UICorner");
-local UIStroke = Instance.new("UIStroke");
-local UIGradient = Instance.new("UIGradient");
-local T = Instance.new("TextLabel");
-local UIGradient1 = Instance.new("UIGradient");
-
-ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-ScreenGui.Parent = game:GetService("Players").LocalPlayer.PlayerGui
-
-DropShadowHolder.AnchorPoint = Vector2.new(0.5, 0.5)
-DropShadowHolder.BackgroundTransparency = 1
-DropShadowHolder.BorderSizePixel = 0
-DropShadowHolder.Position = UDim2.new(0.5, 0, 0.1, 0)
-DropShadowHolder.Size = UDim2.new(0, 500, 0, 68)
-DropShadowHolder.ZIndex = 0
-DropShadowHolder.Name = "DropShadowHolder"
-DropShadowHolder.Parent = ScreenGui
-
-DropShadow.Image = "rbxassetid://6015897843"
-DropShadow.ImageColor3 = Color3.fromRGB(0, 0, 0)
-DropShadow.ImageTransparency = 0.5
-DropShadow.ScaleType = Enum.ScaleType.Slice
-DropShadow.SliceCenter = Rect.new(49, 49, 450, 450)
-DropShadow.AnchorPoint = Vector2.new(0.5, 0.5)
-DropShadow.BackgroundTransparency = 1
-DropShadow.BorderSizePixel = 0
-DropShadow.Position = UDim2.new(0.5, 0, 0.5, 0)
-DropShadow.Size = UDim2.new(1, 47, 1, 47)
-DropShadow.ZIndex = 0
-DropShadow.Name = "DropShadow"
-DropShadow.Parent = DropShadowHolder
-
-Main.AnchorPoint = Vector2.new(0.5, 0.5)
-Main.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-Main.BackgroundTransparency = 0.5
-Main.BorderColor3 = Color3.fromRGB(0, 0, 0)
-Main.BorderSizePixel = 0
-Main.Position = UDim2.new(0.5, 0, 0.5, 0)
-Main.Size = UDim2.new(1, -47, 1, -47)
-Main.Name = "Main"
-Main.Parent = DropShadow
-
-UICorner.CornerRadius = UDim.new(0, 5)
-UICorner.Parent = Main
-
-UIStroke.Color = Color3.fromRGB(255, 255, 255)
-UIStroke.Thickness = 2.5
-UIStroke.Parent = Main
-
-UIGradient.Color = ColorSequence.new{
-	ColorSequenceKeypoint.new(0, Color3.fromRGB(131.00000739097595, 181.0000044107437, 255)),
-	ColorSequenceKeypoint.new(1, Color3.fromRGB(224.000001847744, 162.00000554323196, 255))
-}
-UIGradient.Parent = UIStroke
-
-T.Font = Enum.Font.GothamBold
-T.Text = "Happy Cat hub"
-T.TextColor3 = Color3.fromRGB(255, 255, 255)
-T.TextSize = 16.5
-T.TextYAlignment = Enum.TextYAlignment.Bottom
-T.AnchorPoint = Vector2.new(0.5, 0)
-T.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-T.BackgroundTransparency = 0.9990000128746033
-T.BorderColor3 = Color3.fromRGB(0, 0, 0)
-T.BorderSizePixel = 0
-T.Position = UDim2.new(0.5, 0, 0, 15)
-T.Size = UDim2.new(0, 500, 0, 18)
-T.Name = "Top"
-T.Parent = Main
-
-UIGradient1.Color = ColorSequence.new{
-	ColorSequenceKeypoint.new(0, Color3.fromRGB(131.00000739097595, 181.0000044107437, 255)),
-	ColorSequenceKeypoint.new(1, Color3.fromRGB(224.000001847744, 162.00000554323196, 255))
-}
-UIGradient1.Parent = T
-
-T.Size = UDim2.new(0, T.TextBounds.X, 0, 18)
-if T.Size.X.Offset then
-	DropShadowHolder.Size = UDim2.new(0, T.TextBounds.X + 68, 0, 48)
-end
-T:GetPropertyChangedSignal("Text"):Connect(function()
-	T.Size = UDim2.new(0, T.TextBounds.X, 0, 18)
-	if T.Size.X.Offset then
-		DropShadowHolder.Size = UDim2.new(0, T.TextBounds.X + 68, 0, 48)
-	end
-end)
-
-function SetTitle(v)
-	T.Text = v
-end
