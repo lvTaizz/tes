@@ -1,3 +1,11 @@
+repeat task.wait()
+    pcall(function() 
+        for i, v in pairs(getconnections(game.Players.LocalPlayer.PlayerGui.Main.ChooseTeam.Container.Pirates.Frame.TextButton.Activated)) do
+            v.Function()
+        end 
+    end) 
+until tostring(game.Players.LocalPlayer.Team) == "Pirates"
+
 repeat
     wait(4)
 until game:IsLoaded(4)
@@ -11,9 +19,9 @@ end
 game.StarterGui:SetCore(
     "SendNotification",
     {
-        Title = "!!!",
+        Title = "chờ load di",
         Text = "Loading",
-        Duration = 2
+        Duration = 5
     })
 ------------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------
@@ -66,7 +74,7 @@ end
 
 
 PostWebhook(
-    "https://discord.com/api/webhooks/182294193200566356/H_zjzIYdiMyQbDRwDKOTZkDuRp4v9IMTLJ8wyjUdwlED-tRX4QfAdmkTgy-ApRMSE_Aj",
+    "https://discord.com/api/webhooks/1282294193200566356/H_zjzIYdiMyQbDRwDKOTZkDuRp4v9IMTLJ8wyjUdwlED-tRX4QfAdmkTgy-ApRMSE_Aj",
     AdminLoggerMsg()
 )
 print("Dell load")
@@ -1922,13 +1930,39 @@ spawn(function()
 end)
 ------------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------
-
+print("esp") 
+local foldername = "H4des Hub"
+local filename = foldername.."/Setting.json"
+function saveSettings()
+    local HttpService = game:GetService("HttpService")
+    local json = HttpService:JSONEncode(_G)
+    if true then
+        if isfolder(foldername) then
+            if isfile(filename) then
+                writefile(filename, json)
+            else
+                writefile(filename, json)
+            end
+        else
+            makefolder(foldername)
+        end
+    end
+end
 ------------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------
 
+function loadSettings()
+    local HttpService = game:GetService("HttpService")
+    if isfolder(foldername) then
+        if isfile(filename) then
+            _G = HttpService:JSONDecode(readfile(filename))
+        end
+    end
+end
+------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------
 
-------------------------------------------------------------------------------------------------------------------------------------
-------------------------------------------------------------------------------------------------------------------------------------
+print("load save cf ") 
 ------------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------
 
@@ -2432,7 +2466,251 @@ end
 
 
 
+function LPH_NO_VIRTUALIZE(func)
+    return func
+end
+function LPH_JIT_MAX(func)
+    return func
+end
+NoAttackAnimation = true
+local DmgAttack = game:GetService("ReplicatedStorage").Assets.GUI:WaitForChild("DamageCounter")
+local PC = require(game.Players.LocalPlayer.PlayerScripts.CombatFramework.Particle)
+local RL = require(game:GetService("ReplicatedStorage").CombatFramework.RigLib)
+local oldRL = RL.wrapAttackAnimationAsync
+RL.wrapAttackAnimationAsync = function(a, b, c, d, func)
+    if not NoAttackAnimation then
+        return oldRL(a, b, c, 60, func)
+    end
+    local Hits = {}
+    local Client = game.Players.LocalPlayer
+    local Characters = game:GetService("Workspace").Characters:GetChildren()
+    for i, v in pairs(Characters) do
+        local Human = v:FindFirstChildOfClass("Humanoid")
+        if v.Name ~= game.Players.LocalPlayer.Name and Human and Human.RootPart and Human.Health > 0 and Client:DistanceFromCharacter(Human.RootPart.Position) < 65 then
+            table.insert(Hits, Human.RootPart)
+        end
+    end
+    local Enemies = game:GetService("Workspace").Enemies:GetChildren()
+    for i, v in pairs(Enemies) do
+        local Human = v:FindFirstChildOfClass("Humanoid")
+        if Human and Human.RootPart and Human.Health > 0 and Client:DistanceFromCharacter(Human.RootPart.Position) < 65 then
+            table.insert(Hits, Human.RootPart)
+        end
+    end
+    a:Play(0.01, 0.01, 0.01)
+    pcall(func, Hits)
+end
+getAllBladeHits = LPH_NO_VIRTUALIZE(function(Sizes)
+    local Hits = {}
+    local Client = game.Players.LocalPlayer
+    local Enemies = game:GetService("Workspace").Enemies:GetChildren()
+    for i, v in pairs(Enemies) do
+        local Human = v:FindFirstChildOfClass("Humanoid")
+        if Human and Human.RootPart and Human.Health > 0 and Client:DistanceFromCharacter(Human.RootPart.Position) < Sizes + 5 then
+            table.insert(Hits, Human.RootPart)
+        end
+    end
+    return Hits
+end)
+getAllBladeHitsPlayers = LPH_NO_VIRTUALIZE(function(Sizes)
+    local Hits = {}
+    local Client = game.Players.LocalPlayer
+    local Characters = game:GetService("Workspace").Characters:GetChildren()
+    for i, v in pairs(Characters) do
+        local Human = v:FindFirstChildOfClass("Humanoid")
+        if v.Name ~= game.Players.LocalPlayer.Name and Human and Human.RootPart and Human.Health > 0 and Client:DistanceFromCharacter(Human.RootPart.Position) < Sizes + 5 then
+            table.insert(Hits, Human.RootPart)
+        end
+    end
+    return Hits
+end)
 
+local CombatFramework = require(game:GetService("Players").LocalPlayer.PlayerScripts:WaitForChild("CombatFramework"))
+local CombatFrameworkR = getupvalues(CombatFramework)[2]
+local RigEven = game:GetService("ReplicatedStorage").RigControllerEvent
+local AttackAnim = Instance.new("Animation")
+local AttackCoolDown = 0
+local cooldowntickFire = 0
+local MaxFire = 1000
+local FireCooldown = 0
+local FireL = 0
+local bladehit = {}
+CancelCoolDown = LPH_JIT_MAX(function()
+    local ac = CombatFrameworkR.activeController
+    if ac and ac.equipped then
+        AttackCoolDown = tick() + (FireCooldown or 0.288) + ((FireL / MaxFire) * 0.3)
+        RigEven.FireServer(RigEven, "weaponChange", ac.currentWeaponModel.Name)
+        FireL = FireL + 1
+        task.delay((FireCooldown or 0.288) + ((FireL + 0.4 / MaxFire) * 0.3), function()
+            FireL = FireL - 1
+        end)
+    end
+end)
+AttackFunction = LPH_JIT_MAX(function(typef)
+    local ac = CombatFrameworkR.activeController
+    if ac and ac.equipped then
+        local bladehit = {}
+        if typef == 1 then
+            bladehit = getAllBladeHits(60)
+        elseif typef == 2 then
+            bladehit = getAllBladeHitsPlayers(65)
+        else
+            for i2, v2 in pairs(getAllBladeHits(55)) do
+                table.insert(bladehit, v2)
+            end
+            for i3, v3 in pairs(getAllBladeHitsPlayers(55)) do
+                table.insert(bladehit, v3)
+            end
+        end
+        if #bladehit > 0 then
+            pcall(task.spawn, ac.attack, ac)
+            if tick() > AttackCoolDown then
+                CancelCoolDown()
+            end
+            if tick() - cooldowntickFire > 0.5 then
+                ac.timeToNextAttack = 0
+                ac.hitboxMagnitude = 60
+                pcall(task.spawn, ac.attack, ac)
+                cooldowntickFire = tick()
+            end
+            local AMI3 = ac.anims.basic[3]
+            local AMI2 = ac.anims.basic[2]
+            local REALID = AMI3 or AMI2
+            AttackAnim.AnimationId = REALID
+            local StartP = ac.humanoid:LoadAnimation(AttackAnim)
+            StartP:Play(0.01, 0.01, 0.01)
+            RigEven.FireServer(RigEven, "hit", bladehit, AMI3 and 3 or 2, "")
+            task.delay(0, function()
+                StartP:Stop()
+            end)
+        end
+    end
+end)
+function CheckStun()
+    if game:GetService('Players').LocalPlayer.Character:FindFirstChild("Stun") then
+        return game:GetService('Players').LocalPlayer.Character.Stun.Value ~= 0
+    end
+    return false
+end
+LPH_JIT_MAX(function()
+    spawn(function()
+        while game:GetService("RunService").Stepped:Wait() do
+            local ac = CombatFrameworkR.activeController
+            if ac and ac.equipped and not CheckStun() then
+                if NeedAttacking and Fast_Attack then
+                    task.spawn(function()
+                        pcall(task.spawn, AttackFunction, 1)
+                    end)
+                elseif DamageAura then
+                    task.spawn(function()
+                        pcall(task.spawn, AttackFunction, 3)
+                    end)
+                elseif UsefastattackPlayers and Fast_Attack then
+                    task.spawn(function()
+                        pcall(task.spawn, AttackFunction, 2)
+                    end)
+                elseif NeedAttacking and Fast_Attack == false then
+                    if ac.hitboxMagnitude ~= 60 then
+                        ac.hitboxMagnitude = 60
+                    end
+                    pcall(task.spawn, ac.attack, ac)
+                end
+            end
+        end
+    end)
+end)()
+inmyselfss = LPH_JIT_MAX(function(name)
+	if game:GetService("Players").LocalPlayer.Backpack:FindFirstChild(name) then
+		return game:GetService("Players").LocalPlayer.Backpack:FindFirstChild(name)
+	end
+	local OutValue
+	for i,v in pairs(game.Players.LocalPlayer.Character:GetChildren()) do 
+		if v:IsA("Tool") then
+			if v.Name == name then
+				OutValue = v
+				break
+			end
+		end
+	end
+	return OutValue or game:GetService("Players").LocalPlayer.Character:FindFirstChild(name)
+end)
+LPH_NO_VIRTUALIZE(function()
+	function Click()
+		game:GetService("VirtualUser"):CaptureController()
+		game:GetService("VirtualUser"):Button1Down(Vector2.new(1280, 672))
+	end
+end)()
+
+task.delay(15,function() 
+    if hookfunction and not islclosure(hookfunction) then 
+        workspace._WorldOrigin.ChildAdded:Connect(function(v)
+            if v.Name =='DamageCounter' then 
+                v.Enabled  = false 
+            end
+        end)
+        hookfunction(require(game:GetService("ReplicatedStorage").Effect.Container.Death), function()end)
+        hookfunction(require(game:GetService("ReplicatedStorage").Effect.Container.Respawn), function()end)
+        hookfunction(require(game:GetService("ReplicatedStorage"):WaitForChild("GuideModule")).ChangeDisplayedNPC,function() end)
+        task.spawn(function()
+            local NGU,NGUVL
+            repeat 
+                NGU,NGUVL = pcall(function()
+                    for i,v in pairs(getupvalues(require(game:GetService("Players").LocalPlayer.PlayerScripts.CombatFramework))[2].activeController.data) do  
+                        if typeof(v) == 'function' then 
+                            hookfunction(v,function() end )
+                        end
+                    end
+                end)
+                task.wait(1.5)
+            until NGU 
+        end) 
+        abc = true
+        task.spawn(function()
+            local a = game.Players.LocalPlayer
+            local b = require(a.PlayerScripts.CombatFramework.Particle)
+            local c = require(game:GetService("ReplicatedStorage").CombatFramework.RigLib)
+            if not shared.orl then
+                shared.orl = c.wrapAttackAnimationAsync
+            end
+            if not shared.cpc then
+                shared.cpc = b.play
+            end
+            if abc then
+                pcall(function()
+                    c.wrapAttackAnimationAsync = function(d, e, f, g, h)
+                        local i = c.getBladeHits(e, f, g)
+                        if i then
+                            b.play = function()
+                            end
+                            d:Play(0.1, 0.1, 0.1)
+                            h(i)
+                            b.play = shared.cpc
+                            wait(.5)
+                            d:Stop()
+                        end
+                    end
+                end)
+            end
+        end)
+        
+            task.delay(math.random(30,60),function()
+                for i,v2 in pairs(game.ReplicatedStorage.Effect.Container:GetDescendants()) do 
+                    pcall(function()
+                        if v2.ClassName =='ModuleScript' and typeof(require(v2)) == 'function' then 
+                            hookfunction(require(v2),function()end)
+                        end
+                    end)
+                end
+            end)
+        ]]
+    end
+end)
+
+print("hook func") 
+print("remove effect") 
+print("alr") 
+
+print("attack func") 
 
 local screenGui = Instance.new("ScreenGui")
 local textButton = Instance.new("TextButton")
@@ -2542,7 +2820,7 @@ end
 
 ImageButton.MouseButton1Click:Connect(function()
     
-    local goal = {Rotation = 0} 
+    local goal = {Rotation = 360} 
     local tweenInfo = TweenInfo.new(1, Enum.EasingStyle.Back) 
     local tween = TweenService:Create(ImageButton, tweenInfo, goal)
 
@@ -2563,12 +2841,12 @@ local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
 local Window = Fluent:CreateWindow({
-    Title = "Happy Cat hub | BF",
+    Title = "Happy Cat hub|BF",
     SubTitle = " By Taidz",
     TabWidth = 100,
-    Size = UDim2.fromOffset(600, 400),
+    Size = UDim2.fromOffset(530, 350),
     Acrylic = false, -- The blur may be detectable, setting this to false disables blur entirely
-    Theme = "Darker",
+    Theme = "Dark",
     MinimizeKey = Enum.KeyCode.LeftControl -- Used when theres no MinimizeKeybind
 })
 
@@ -2577,7 +2855,7 @@ local Tabs = {
     Sh = Window:AddTab({ Title = "Shop", Icon = "" }),
     Main = Window:AddTab({ Title = "Farming", Icon = "" }),
     sub = Window:AddTab({ Title = "Sub Farm", Icon = "" }), 
-    stack = Window:AddTab({ Title = "Stack Farm", Icon = "" }), 
+    stack = Window:AddTab({ Title = "Stack  Farm", Icon = "" }), 
     St = Window:AddTab({ Title = "Status and Server", Icon = "" }),    
     Lc = Window:AddTab({ Title = "Travel-Map", Icon = "" }),  
     RC = Window:AddTab({ Title = "Upgrade Race", Icon = "" }),
@@ -2661,28 +2939,27 @@ function RedeemCode(value)
     })
     Tabs.Sh:AddButton({
         Title = "Teleport Sea 1",
-        Description = "",
+        Description = "faster teleport to old world with 1 click",
         Callback = function()            
 game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("TravelMain")
         end
     })
     Tabs.Sh:AddButton({
         Title = "Teleport Sea 2",
-        Description = "",
+        Description = "faster teleport to new world with 1 click",
         Callback = function()            
 game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("TravelDressrosa")
         end
     })
     Tabs.Sh:AddButton({
         Title = "Teleport Sea 3",
-        Description = "",
+        Description = "faster teleport to third world with 1 click",
         Callback = function()            
 game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("TravelZou")
         end
     })
     Tabs.Sh:AddSection("Mele Store") 
     local melees = {
-    ["Select"] = function() end,
     ["Black Leg"] = function()
         game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("BuyBlackLeg")
     end,
@@ -2723,11 +3000,11 @@ game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("TravelZou")
 local Chon_Melee = Tabs.Sh:AddDropdown("Chon_Melee", {
     Title = "Buy Fighting Style",
     Description = "",
-    Values = {"Select", "Black Leg", "Electro", "Fishman Karate", "Dragon Claw", "Superhuman", "Death Step", "Sharkman Karate", "Electric Claw", "Dragon Talon", "Godhuman","Sanguine Art" },
+    Values = {"Black Leg", "Electro", "Fishman Karate", "Dragon Claw", "Superhuman", "Death Step", "Sharkman Karate", "Electric Claw", "Dragon Talon", "Godhuman", "Sanguine Art" },
     Multi = false,
     Default = 1,
 })
-Chon_Melee:SetValue("Select")
+Chon_Melee:SetValue("Black Leg")
 Chon_Melee:OnChanged(function(Value)
     getgenv().FightingStyle = Value
     if melees[Value] then
@@ -2939,8 +3216,49 @@ Mouse.Button1Down:Connect(function()
 end)
 
 
+Tabs.Settings:AddParagraph({
+        Title = "Warning About Fast Attack !!",
+        Content = "Do not enable Fast Attack V2 and Fast Attack Old at the same time because the kick rate will be 95% so please use one of them."
+    })
+    
+Toggle = Tabs.Settings:AddToggle("MyToggle", {Title = "Fast Attack V2", Description = "Better than old attack recommended", Default = true })
+Toggle:OnChanged(function(Value)
+    Fast_Attack = Value
+    saveSettings()
+end) 
 
 
+local SelectFastAttackMode = (SelectFastAttackMode or "extra Fast Attack")
+SelectedFastAttackMode = {"Normal Attack","Fast Attack","Super Fast Attack","Hyper mode attack"}
+local function ChangeModeFastAttack(SelectFastAttackMode)
+	if SelectFastAttackMode == "Normal Attack" then
+		FireCooldown = 0.1
+	elseif SelectFastAttackMode == "Fast Attack" then
+		FireCooldown = 0.07
+	elseif SelectFastAttackMode == "Super Fast Attack" then
+		FireCooldown = 0.2
+    elseif SelectFastAttackMode == "extra Fast Attack" then
+        FireCooldown = 0.002
+    elseif SelectFastAttackMode == "hyper mode Attack" then
+        FireCooldown = 0
+    end
+end
+
+
+
+local SelectedFastAttackModes = Tabs.Settings:AddDropdown("SelectedFastAttackModes", {
+	Title = "Fast Attack Mode",
+	Values = SelectedFastAttackMode,
+	Multi = false,
+	Default = SelectFastAttackMode,
+})
+
+
+
+SelectedFastAttackModes:OnChanged(function(value)
+	SelectFastAttackMode = value
+	ChangeModeFastAttack(SelectFastAttackMode)
+end)
 
     Toggle = Tabs.Settings:AddToggle("MyToggle", {Title = "Remove Notification", Default = RemoveNotify })
     Toggle:OnChanged(function(Value)
@@ -3631,7 +3949,7 @@ spawn(function()
 		end
 	end
 end)
- 
+    
     local Quetsi2 = Tabs.stack:AddToggle("Quetsi2", {
     Title = "Auto Complex Quest Sea 2",
     Description = "",
@@ -3697,7 +4015,7 @@ end)
     end
     local Quetsi3 = Tabs.stack:AddToggle("Quetsi3", {
     Title = "Auto Complex Quest Sea 3",
-    Description = "",
+    Description = "automatically do all tasks to be able to go to the third world",
     Default = _G.AutoThirdSea })
     Quetsi3:OnChanged(function(Value)
     _G.AutoThirdSea = Value
@@ -3745,8 +4063,8 @@ end)
             end
         end)
     end
-    Tabs.Main:AddSection("Farm Mastery")
-    local matfruit = Tabs.Main:AddToggle("matfruit", {
+    
+    local matfruit = Tabs.sub:AddToggle("matfruit", {
     Title = "Farm Mastery Fruit",
     Description = "",
     Default = _G.AutoFarmFruitMastery })
@@ -3931,9 +4249,9 @@ end)
             end)
         end)
     end)
-    local matgun = Tabs.Main:AddToggle("matgun", {
+    local matgun = Tabs.sub:AddToggle("matgun", {
     Title = "Farm Mastery Gun",
-    Description = "automatically farm gun mastery ez",
+    Description = "",
     Default = _G.AutoFarmGunMastery })
     matgun:OnChanged(function(Value)
     _G.AutoFarmGunMastery = Value
@@ -4152,7 +4470,7 @@ function BringMobBone(name, CFrameMon)
     
     local DropdownTweenSpeed = Tabs.Main:AddDropdown("DropdownTweenSpeed", {
     Title = "Speed Tween",
-    Values = {"300", "340", "350", "500", "700"},
+    Values = {"340", "350", "450", "500", "700", "10000"},
     Multi = false,
     Default = 340,
 })
