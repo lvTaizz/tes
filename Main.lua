@@ -4153,19 +4153,15 @@ function BringMobBone(name, CFrameMon)
     
     Tabs.Main:AddSection("Bone and Cake Prince")
     
-    local Input = Tab:AddInput("TweenSpeed", {
+    
+local DropdownTweenSpeed = Tabs.Main:AddDropdown("DropdownTweenSpeed", {
     Title = "Speed Tween",
-    Description = "select speed tween",
-    Default = "450",
-    Placeholder = "Placeholder",
-    Numeric = false, -- Only allows numbers
-    Finished = false, -- Only calls callback when you press enter
-    Callback = function(Value)
-        print("Input changed:", Value)
-    end
+    Values = {"325", "350", "370", "500", "700","10000"},
+    Multi = false,
+    Default = 350,
 })
-InputTweenSpeed:SetValue("TweenSpeed")
-InputTweenSpeed:OnChanged(function(Value)
+DropdownTweenSpeed:SetValue("TweenSpeed")
+DropdownTweenSpeed:OnChanged(function(Value)
     getgenv().TweenSpeed = Value
     saveSettings()
 end)
