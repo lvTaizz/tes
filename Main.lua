@@ -3,21 +3,15 @@ repeat task.wait() until game.Players.LocalPlayer
 
 if game.PlaceId == 2753915549 then
 	sea1 = true
-
 elseif game.PlaceId == 4442272183 then
      sea2 = true
-
 elseif game.PlaceId == 7449423635 then
 	sea3 = true
 
-else
-	game:GetService("Players").LocalPlayer:Kick("check game support")
-
-end
 game.StarterGui:SetCore(
     "SendNotification",
     {
-        Title = "happy hub",
+        Title = "3",
         Text = "Loading",
         Duration = 5
     })
