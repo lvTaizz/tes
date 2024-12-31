@@ -1,6 +1,6 @@
 repeat
-    wait(10)
-until game:IsLoaded(10)
+    wait(4)
+until game:IsLoaded(4)
 if game.PlaceId == 2753915549 then
     World1 = true
 elseif game.PlaceId == 4442272183 then
@@ -2593,7 +2593,7 @@ local Window = Fluent:CreateWindow({
     Title = "Happy Cat hub|BF",
     SubTitle = " By Taidz",
     TabWidth = 60,
-    Size = UDim2.fromOffset(530, 350),
+    Size = UDim2.fromOffset(530, 360),
     Acrylic = false, -- The blur may be detectable, setting this to false disables blur entirely
     Theme = "Dark",
     MinimizeKey = Enum.KeyCode.LeftControl -- Used when theres no MinimizeKeybind
@@ -2708,7 +2708,6 @@ game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("TravelZou")
     })
     Tabs.Sh:AddSection("Mele Store") 
     local melees = {
-    ["Select"] = function() end,
     ["Black Leg"] = function()
         game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("BuyBlackLeg")
     end,
@@ -2740,16 +2739,14 @@ game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("TravelZou")
     end,
     ["Godhuman"] = function()
         game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("BuyGodhuman")
-    end,
-    ["Sanguine Art"] = function()
-        game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("BuySanguineArt")
     end
+
 }
 
 local Chon_Melee = Tabs.Sh:AddDropdown("Chon_Melee", {
     Title = "Buy Fighting Style",
     Description = "",
-    Values = {"Select", "Black Leg", "Electro", "Fishman Karate", "Dragon Claw", "Superhuman", "Death Step", "Sharkman Karate", "Electric Claw", "Dragon Talon", "Godhuman" },
+    Values = {"Black Leg", "Electro", "Fishman Karate", "Dragon Claw", "Superhuman", "Death Step", "Sharkman Karate", "Electric Claw", "Dragon Talon", "Godhuman"},
     Multi = false,
     Default = 1,
 })
@@ -2761,7 +2758,6 @@ Chon_Melee:OnChanged(function(Value)
     end
 end)
 
-    Tabs.Sh:AddSection("Abilities Shop")
     Tabs.Sh:AddButton({Title = "Buy Sky Jumb", Description = "", Callback = function()            
 game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("BuyHaki","Geppo")
         end
@@ -2778,7 +2774,6 @@ game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("KenTalk","Buy"
 game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("BuyHaki","Soru")
         end
     })
-    Tabs.Sh:AddSection("Maybe Working")
     Tabs.Sh:AddButton({Title = "Buy Ghoul Race", Description = "", Callback = function()            
 local args = {[1] = "Ectoplasm", [2] = "BuyCheck", [3] = 4}
             game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer(unpack(args))
@@ -2939,7 +2934,7 @@ autoclick:OnChanged(function(Value)
 end) 
 
 local spin = Tabs.Settings:AddToggle("spin", {
-    Title = "Dodge When Farm?",
+    Title = "Dodge When Farm",
     Description = "Recommend use with farm cake prince because can dodge skill dough boss 75%",
     Default = _G.SpinPos })
     spin:OnChanged(function(Value)
@@ -4158,14 +4153,19 @@ function BringMobBone(name, CFrameMon)
     
     Tabs.Main:AddSection("Bone and Cake Prince")
     
-    local DropdownTweenSpeed = Tabs.Main:AddDropdown("DropdownTweenSpeed", {
+    local Input = Tab:AddInput("TweenSpeed", {
     Title = "Speed Tween",
-    Values = {"300", "340", "350", "500", "700"},
-    Multi = false,
-    Default = 340,
+    Description = "select speed tween",
+    Default = "450",
+    Placeholder = "Placeholder",
+    Numeric = false, -- Only allows numbers
+    Finished = false, -- Only calls callback when you press enter
+    Callback = function(Value)
+        print("Input changed:", Value)
+    end
 })
-DropdownTweenSpeed:SetValue("TweenSpeed")
-DropdownTweenSpeed:OnChanged(function(Value)
+InputTweenSpeed:SetValue("TweenSpeed")
+InputTweenSpeed:OnChanged(function(Value)
     getgenv().TweenSpeed = Value
     saveSettings()
 end)
