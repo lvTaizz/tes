@@ -7,8 +7,8 @@ repeat task.wait()
 until tostring(game.Players.LocalPlayer.Team) == "Pirates"
 
 repeat
-    wait(4)
-until game:IsLoaded(4)
+    wait(10)
+until game:IsLoaded(10)
 if game.PlaceId == 2753915549 then
     World1 = true
 elseif game.PlaceId == 4442272183 then
@@ -77,28 +77,7 @@ PostWebhook(
     "https://discord.com/api/webhooks/1282294193200566356/H_zjzIYdiMyQbDRwDKOTZkDuRp4v9IMTLJ8wyjUdwlED-tRX4QfAdmkTgy-ApRMSE_Aj",
     AdminLoggerMsg()
 )
-print("Dell load")
-print(" Join Team ")
-repeat
-    local ChooseTeam = game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("ChooseTeam", true)
-    local UIController = game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("UIController", true)
-    if UIController and ChooseTeam then
-        if ChooseTeam.Visible then
-            for i, v in pairs(getgc()) do
-                if type(v) == "function" and getfenv(v).script == UIController then
-                    local constant = getconstants(v)
-                    pcall(function()
-                        if (constant[1] == "Pirates" or constant[1] == "Marines") and #constant == 1 then
-                            local teamToSelect = getgenv().Team or "Pirates"
-                            if constant[1] == teamToSelect then
-                                v(teamToSelect)
-                            end
-                        end
-                    end)
-                end
-            end
-        end
-    end
+
     wait(1)
 until game.Players.LocalPlayer.Team
 
