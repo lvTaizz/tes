@@ -8,8 +8,6 @@ elseif placeId == 4442272183 then
 Second_Sea = true
 elseif placeId == 7449423635 then
 Third_Sea = true
-else
-    game:GetService("Players").LocalPlayer:Kick("fuck you game not support")
 end
             function MaterialMon()
 			if _G.SelectMaterial == "Radioactive Material" then
