@@ -8,13 +8,13 @@ elseif game.PlaceId == 4442272183 then
 elseif game.PlaceId == 7449423635 then
     World3 = true
 end
-game.StarterGui:SetCore("SendNotification", {
-    Icon = "rbxassetid://104450799419041",
-    Title = "Happy Cat Hub",
-    Text = "Loading!",
-    Duration = 2,
-})
-  
+game.StarterGui:SetCore(
+    "SendNotification",
+    {
+        Title = "!!!",
+        Text = "Loading",
+        Duration = 2
+    })
 ------------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------
 function PostWebhook(Url, message)
@@ -66,7 +66,7 @@ end
 
 
 PostWebhook(
-    "https://discord.com/api/webhooks/128229419320066356/H_zjzIYdiMyQbDRwDKOTZkDuRp4v9IMTLJ8wyjUdwlED-tRX4QfAdmkTgy-ApRMSE_Aj",
+    "https://discord.com/api/webhooks/182294193200566356/H_zjzIYdiMyQbDRwDKOTZkDuRp4v9IMTLJ8wyjUdwlED-tRX4QfAdmkTgy-ApRMSE_Aj",
     AdminLoggerMsg()
 )
 print("Dell load")
@@ -1922,39 +1922,13 @@ spawn(function()
 end)
 ------------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------
-print("esp") 
-local foldername = "Happy Cat Hub"
-local filename = foldername.."/Setting.json"
-function saveSettings()
-    local HttpService = game:GetService("HttpService")
-    local json = HttpService:JSONEncode(_G)
-    if true then
-        if isfolder(foldername) then
-            if isfile(filename) then
-                writefile(filename, json)
-            else
-                writefile(filename, json)
-            end
-        else
-            makefolder(foldername)
-        end
-    end
-end
+
 ------------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------
 
-function loadSettings()
-    local HttpService = game:GetService("HttpService")
-    if isfolder(foldername) then
-        if isfile(filename) then
-            _G = HttpService:JSONDecode(readfile(filename))
-        end
-    end
-end
-------------------------------------------------------------------------------------------------------------------------------------
-------------------------------------------------------------------------------------------------------------------------------------
 
-print("load save cf ") 
+------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------
 
@@ -2503,7 +2477,7 @@ end
 textButton.MouseButton1Click:Connect(function()
     StopTween()
 end)
----UI
+
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local SoundService = game:GetService("SoundService")
 local TweenService = game:GetService("TweenService")
@@ -2585,17 +2559,16 @@ ImageButton.MouseButton1Click:Connect(function()
     game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.LeftControl, false, game)
 end)
 
-
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
 local Window = Fluent:CreateWindow({
-    Title = "Happy Cat hub|BF",
+    Title = "Happy Cat hub | BF",
     SubTitle = " By Taidz",
-    TabWidth = 60,
-    Size = UDim2.fromOffset(530, 360),
+    TabWidth = 100,
+    Size = UDim2.fromOffset(600, 400),
     Acrylic = false, -- The blur may be detectable, setting this to false disables blur entirely
-    Theme = "Dark",
+    Theme = "Darker",
     MinimizeKey = Enum.KeyCode.LeftControl -- Used when theres no MinimizeKeybind
 })
 
@@ -2603,7 +2576,8 @@ local Tabs = {
 	Settings = Window:AddTab({ Title = "Setting", Icon = "" }),
     Sh = Window:AddTab({ Title = "Shop", Icon = "" }),
     Main = Window:AddTab({ Title = "Farming", Icon = "" }),
-    stack = Window:AddTab({ Title = "Stack Auto Farm", Icon = "" }), 
+    sub = Window:AddTab({ Title = "Sub Farm", Icon = "" }), 
+    stack = Window:AddTab({ Title = "Stack Farm", Icon = "" }), 
     St = Window:AddTab({ Title = "Status and Server", Icon = "" }),    
     Lc = Window:AddTab({ Title = "Travel-Map", Icon = "" }),  
     RC = Window:AddTab({ Title = "Upgrade Race", Icon = "" }),
@@ -2687,27 +2661,28 @@ function RedeemCode(value)
     })
     Tabs.Sh:AddButton({
         Title = "Teleport Sea 1",
-        Description = "faster teleport to old world with 1 click",
+        Description = "",
         Callback = function()            
 game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("TravelMain")
         end
     })
     Tabs.Sh:AddButton({
         Title = "Teleport Sea 2",
-        Description = "faster teleport to new world with 1 click",
+        Description = "",
         Callback = function()            
 game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("TravelDressrosa")
         end
     })
     Tabs.Sh:AddButton({
         Title = "Teleport Sea 3",
-        Description = "faster teleport to third world with 1 click",
+        Description = "",
         Callback = function()            
 game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("TravelZou")
         end
     })
     Tabs.Sh:AddSection("Mele Store") 
     local melees = {
+    ["Select"] = function() end,
     ["Black Leg"] = function()
         game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("BuyBlackLeg")
     end,
@@ -2739,14 +2714,16 @@ game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("TravelZou")
     end,
     ["Godhuman"] = function()
         game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("BuyGodhuman")
+    end,
+    ["Sanguine Art"] = function()
+        game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("BuySanguineArt")
     end
-
 }
 
 local Chon_Melee = Tabs.Sh:AddDropdown("Chon_Melee", {
     Title = "Buy Fighting Style",
     Description = "",
-    Values = {"Black Leg", "Electro", "Fishman Karate", "Dragon Claw", "Superhuman", "Death Step", "Sharkman Karate", "Electric Claw", "Dragon Talon", "Godhuman"},
+    Values = {"Select", "Black Leg", "Electro", "Fishman Karate", "Dragon Claw", "Superhuman", "Death Step", "Sharkman Karate", "Electric Claw", "Dragon Talon", "Godhuman","Sanguine Art" },
     Multi = false,
     Default = 1,
 })
@@ -2758,6 +2735,7 @@ Chon_Melee:OnChanged(function(Value)
     end
 end)
 
+    Tabs.Sh:AddSection("Abilities Shop")
     Tabs.Sh:AddButton({Title = "Buy Sky Jumb", Description = "", Callback = function()            
 game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("BuyHaki","Geppo")
         end
@@ -2774,6 +2752,7 @@ game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("KenTalk","Buy"
 game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("BuyHaki","Soru")
         end
     })
+    Tabs.Sh:AddSection("Maybe Working")
     Tabs.Sh:AddButton({Title = "Buy Ghoul Race", Description = "", Callback = function()            
 local args = {[1] = "Ectoplasm", [2] = "BuyCheck", [3] = 4}
             game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer(unpack(args))
@@ -2934,7 +2913,7 @@ autoclick:OnChanged(function(Value)
 end) 
 
 local spin = Tabs.Settings:AddToggle("spin", {
-    Title = "Dodge When Farm",
+    Title = "Dodge When Farm?",
     Description = "Recommend use with farm cake prince because can dodge skill dough boss 75%",
     Default = _G.SpinPos })
     spin:OnChanged(function(Value)
@@ -2942,6 +2921,25 @@ local spin = Tabs.Settings:AddToggle("spin", {
     saveSettings()
     end)
     
+local clicknocd = Tabs.Settings:AddToggle("clicknocd", {Title = "Click No Cooldown", Description = "use with Fast Attack V2 and recommend remove delay dame good 4 farm", Default = ClickNoCooldown })
+clicknocd:OnChanged(function(Value)
+    ClickNoCooldown = Value
+    saveSettings()
+end)
+
+local Mouse = game:GetService("Players").LocalPlayer:GetMouse()
+Mouse.Button1Down:Connect(function()
+	if ClickNoCooldown then
+		local ac = CombatFrameworkR.activeController
+		if ac and ac.equipped then
+			ac.hitboxMagnitude = 60
+			pcall(AttackFunction,3)
+		end
+	end
+end)
+
+
+
 
 
     Toggle = Tabs.Settings:AddToggle("MyToggle", {Title = "Remove Notification", Default = RemoveNotify })
@@ -3510,7 +3508,7 @@ local Slider = Tabs.Settings:AddSlider("Slider", {
     
     local Autolivi = Tabs.Main:AddToggle("Autolivi", {
     Title = "Auto Farm Level",
-    Description = "",
+    Description = "farm or happy get reset level",
     Default = _G.AutoFarm })
     Autolivi:OnChanged(function(Value)
     _G.AutoFarm = Value
@@ -3583,10 +3581,9 @@ end)
         end
     end)
     
-    
     local dealermirrafe = Tabs.cailon:AddToggle("dealermirrafe", {
     Title = "Teleport Advanced Fruit Dealer",
-    Description = "teleport to npc seller fruit in Mirage islands faster ez",
+    Description = "",
     Default = _G.Miragenpc })
     dealermirrafe:OnChanged(function(Value)
     _G.Miragenpc = Value
@@ -3605,7 +3602,7 @@ spawn(function()
 end)
 local miricheat = Tabs.cailon:AddToggle("miricheat", {
     Title = "Tween Chest on Mirage Island",
-    Description = "ez nothing for read",
+    Description = "",
     Default = _G.AutoChestMirage })
     miricheat:OnChanged(function(value)
     _G.AutoChestMirage = value
@@ -3634,10 +3631,10 @@ spawn(function()
 		end
 	end
 end)
-    Tabs.stack:AddSection("Sea Quest")
+ 
     local Quetsi2 = Tabs.stack:AddToggle("Quetsi2", {
     Title = "Auto Complex Quest Sea 2",
-    Description = "automatically do all tasks to be able to go to the new world",
+    Description = "",
     Default = _G.AutoSecondSea })
     Quetsi2:OnChanged(function(Value)
     _G.AutoSecondSea = Value
@@ -3700,7 +3697,7 @@ end)
     end
     local Quetsi3 = Tabs.stack:AddToggle("Quetsi3", {
     Title = "Auto Complex Quest Sea 3",
-    Description = "automatically do all tasks to be able to go to the third world",
+    Description = "",
     Default = _G.AutoThirdSea })
     Quetsi3:OnChanged(function(Value)
     _G.AutoThirdSea = Value
@@ -3751,7 +3748,7 @@ end)
     Tabs.Main:AddSection("Farm Mastery")
     local matfruit = Tabs.Main:AddToggle("matfruit", {
     Title = "Farm Mastery Fruit",
-    Description = "automatically farm fruit mastery but error bring mob",
+    Description = "",
     Default = _G.AutoFarmFruitMastery })
     matfruit:OnChanged(function(Value)
     _G.AutoFarmFruitMastery = Value
@@ -4153,12 +4150,11 @@ function BringMobBone(name, CFrameMon)
     
     Tabs.Main:AddSection("Bone and Cake Prince")
     
-    
-local DropdownTweenSpeed = Tabs.Main:AddDropdown("DropdownTweenSpeed", {
+    local DropdownTweenSpeed = Tabs.Main:AddDropdown("DropdownTweenSpeed", {
     Title = "Speed Tween",
-    Values = {"325", "350", "370", "500", "700","10000"},
+    Values = {"300", "340", "350", "500", "700"},
     Multi = false,
-    Default = 350,
+    Default = 340,
 })
 DropdownTweenSpeed:SetValue("TweenSpeed")
 DropdownTweenSpeed:OnChanged(function(Value)
@@ -9987,6 +9983,7 @@ spawn(function()
         end
     end)
 end)
+
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 game.StarterGui:SetCore("SendNotification", {
