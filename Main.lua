@@ -1,16 +1,17 @@
-print("load di pls")
-if game.PlaceId == 2753915549 then
-    World1 = true
-elseif game.PlaceId == 4442272183 then
-    World2 = true
-elseif game.PlaceId == 7449423635 then
-    World3 = true
+First_Sea = false
+Second_Sea = false
+Third_Sea = false
+local placeId = game.PlaceId
+if placeId == 2753915549 then
+First_Sea = true
+elseif placeId == 4442272183 then
+Second_Sea = true
+elseif placeId == 7449423635 then
+Third_Sea = true
 else
     game:GetService("Players").LocalPlayer:Kick("fuck you game not support")
 end
-
-
-    function MaterialMon()
+            function MaterialMon()
 			if _G.SelectMaterial == "Radioactive Material" then
 				MMon = "Factory Staff"
 				MPos = CFrame.new(-507.7895202636719, 72.99479675292969, -126.45632934570312)
