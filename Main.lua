@@ -1,17 +1,23 @@
-if game.PlaceId == 2753915549 then
-	sea1 = true
-elseif game.PlaceId == 4442272183 then
-     sea2 = true
-elseif game.PlaceId == 7449423635 then
-	sea3 = true
+repeat task.wait()
+    pcall(function() 
+        for i, v in pairs(getconnections(game.Players.LocalPlayer.PlayerGui.Main.ChooseTeam.Container.Pirates.Frame.TextButton.Activated)) do
+            v.Function()
+        end 
+    end) 
+until tostring(game.Players.LocalPlayer.Team) == "Pirates"
 
-game.StarterGui:SetCore(
-    "SendNotification",
-    {
-        Title = "3",
-        Text = "Loading",
-        Duration = 5
-    })
+repeat task.wait() until game.Players.LocalPlayer.Character
+repeat task.wait() until game.Players.LocalPlayer.Character:FindFirstChild("Head")
+
+if not game:IsLoaded() then game.Loaded:Wait() end
+local plr = game.Players.LocalPlayer
+
+game.StarterGui:SetCore("SendNotification", {
+    Icon = "rbxassetid://104450799419041",
+    Title = "Happy Cat Hub",
+    Text = "Loading!",
+    Duration = 2,
+})
 ------------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------
 function PostWebhook(Url, message)
