@@ -1,12 +1,5 @@
 repeat task.wait() until game.Players
 repeat task.wait() until game.Players.LocalPlayer
-repeat task.wait()
-    pcall(function() 
-        for i, v in pairs(getconnections(game.Players.LocalPlayer.PlayerGui.Main.ChooseTeam.Container.Pirates.Frame.TextButton.Activated)) do
-            v.Function()
-        end 
-    end) 
-until tostring(game.Players.LocalPlayer.Team) == "Pirates"
 
 if game.PlaceId == 2753915549 then
 	sea1 = true
