@@ -2552,7 +2552,7 @@ local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
 local Window = Fluent:CreateWindow({
-    Title = "Happy Cat hub | BF",
+    Title = "Happy Cat hub ",
     SubTitle = " By Taidz",
     TabWidth = 60,
     Size = UDim2.fromOffset(530, 350),
@@ -2821,45 +2821,7 @@ end)
         BypassTP = Value		
         saveSettings() 
     end)
-    
-    
-Toggle = Tabs.Settings:AddToggle("MyToggle", {Title = "Auto Ken Haki", Default = _G.AUTOKen })
-    Toggle:OnChanged(function(Value)
-        _G.AUTOKen = Value
-        saveSettings()
-    end)
-    spawn(function()
-        while wait() do
-            pcall(function()
-                if _G.AUTOKen then
-                    repeat task.wait()
-                        if not game:GetService("Players").LocalPlayer.PlayerGui.ScreenGui:FindFirstChild("ImageLabel") then
-                            game:GetService('VirtualUser'):CaptureController()
-                            game:GetService('VirtualUser'):SetKeyDown('0x65')
-                            wait(2)
-                            game:GetService('VirtualUser'):SetKeyUp('0x65')
-                        end
-                    until game:GetService("Players").LocalPlayer.PlayerGui.ScreenGui:FindFirstChild("ImageLabel") or not _G.AUTOKen
-                end
-            end)
-        end
-    end)    
-    
-    local autoclick = Tabs.Settings:AddToggle("autoclick", {Title = "Auto Clicker", Description = "", Default = false })
-autoclick:OnChanged(function(Value)
-   UFFF = Value
-   saveSettings()
-end) 
-
-local spin = Tabs.Settings:AddToggle("spin", {
-    Title = "Dodge When Farm?",
-    Description = "Recommend use with farm cake prince because can dodge skill dough boss 75%",
-    Default = _G.SpinPos })
-    spin:OnChanged(function(Value)
-    _G.SpinPos = Value
-    saveSettings()
-    end)
-    
+         
 
     Toggle = Tabs.Settings:AddToggle("MyToggle", {Title = "Remove Notification", Default = RemoveNotify })
     Toggle:OnChanged(function(Value)
