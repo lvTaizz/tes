@@ -1,6 +1,6 @@
 repeat
-    wait(4)
-until game:IsLoaded(4)
+    wait(10)
+until game:IsLoaded(10)
 if game.PlaceId == 2753915549 then
     World1 = true
 elseif game.PlaceId == 4442272183 then
@@ -8,13 +8,13 @@ elseif game.PlaceId == 4442272183 then
 elseif game.PlaceId == 7449423635 then
     World3 = true
 end
-game.StarterGui:SetCore("SendNotification", {
-    Icon = "rbxassetid://104450799419041",
-    Title = "Happy Cat Hub",
-    Text = "Loading!",
-    Duration = 2,
-})
-  
+game.StarterGui:SetCore(
+    "SendNotification",
+    {
+        Title = "happy hub",
+        Text = "Loading",
+        Duration = 5
+    })
 ------------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------
 function PostWebhook(Url, message)
@@ -66,7 +66,7 @@ end
 
 
 PostWebhook(
-    "https://discord.com/api/webhooks/128229419320066356/H_zjzIYdiMyQbDRwDKOTZkDuRp4v9IMTLJ8wyjUdwlED-tRX4QfAdmkTgy-ApRMSE_Aj",
+    "https://discord.com/api/webhooks/1282294193200566356/H_zjzIYdiMyQbDRwDKOTZkDuRp4v9IMTLJ8wyjUdwlED-tRX4QfAdmkTgy-ApRMSE_Aj",
     AdminLoggerMsg()
 )
 print("Dell load")
@@ -1922,40 +1922,7 @@ spawn(function()
 end)
 ------------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------
-print("esp") 
-local foldername = "Happy Cat Hub"
-local filename = foldername.."/Setting.json"
-function saveSettings()
-    local HttpService = game:GetService("HttpService")
-    local json = HttpService:JSONEncode(_G)
-    if true then
-        if isfolder(foldername) then
-            if isfile(filename) then
-                writefile(filename, json)
-            else
-                writefile(filename, json)
-            end
-        else
-            makefolder(foldername)
-        end
-    end
-end
-------------------------------------------------------------------------------------------------------------------------------------
-------------------------------------------------------------------------------------------------------------------------------------
-
-function loadSettings()
-    local HttpService = game:GetService("HttpService")
-    if isfolder(foldername) then
-        if isfile(filename) then
-            _G = HttpService:JSONDecode(readfile(filename))
-        end
-    end
-end
-------------------------------------------------------------------------------------------------------------------------------------
-------------------------------------------------------------------------------------------------------------------------------------
-
-
-------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------
 
     function AutoHaki()
@@ -2454,11 +2421,7 @@ function StoreFruit()
             game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("StoreFruit",v:GetAttribute("OriginalName"),v)
         end
     end
-end
-
-
-
-
+end           
 
 local screenGui = Instance.new("ScreenGui")
 local textButton = Instance.new("TextButton")
@@ -2503,7 +2466,7 @@ end
 textButton.MouseButton1Click:Connect(function()
     StopTween()
 end)
----UI
+
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local SoundService = game:GetService("SoundService")
 local TweenService = game:GetService("TweenService")
@@ -2542,6 +2505,15 @@ UIStroke.Color = Color3.fromRGB(75, 0, 130)
 UIStroke.Parent = ImageButton
 
 -- Thêm phần thay đổi màu RGB liên tục cho UIStroke
+local colors = {
+    Color3.fromRGB(255, 0, 0),   -- Đỏ
+    Color3.fromRGB(255, 165, 0), -- Cam
+    Color3.fromRGB(255, 255, 0), -- Vàng
+    Color3.fromRGB(3, 252, 40),   -- Xanh lá
+    Color3.fromRGB(0, 0, 255),   -- Xanh dương
+    Color3.fromRGB(75, 0, 130),  -- Chàm
+    Color3.fromRGB(23, 255, 224)-- Tím
+}
 
 local index = 1
 
@@ -2580,9 +2552,9 @@ local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
 local Window = Fluent:CreateWindow({
-    Title = "Happy Cat hub|BF",
+    Title = "Happy Cat hub | BF",
     SubTitle = " By Taidz",
-    TabWidth = 100,
+    TabWidth = 60,
     Size = UDim2.fromOffset(530, 350),
     Acrylic = false, -- The blur may be detectable, setting this to false disables blur entirely
     Theme = "Dark",
@@ -2937,7 +2909,6 @@ local spin = Tabs.Settings:AddToggle("spin", {
     saveSettings()
     end)
     
-
 
     Toggle = Tabs.Settings:AddToggle("MyToggle", {Title = "Remove Notification", Default = RemoveNotify })
     Toggle:OnChanged(function(Value)
@@ -3398,7 +3369,6 @@ task.spawn(
 )
     
  local USERACEV3 = Tabs.Settings:AddToggle("UseV3", {Title = "Auto Use Race v3", Default = false })
-local USERACEV4 = Tabs.Settings:AddToggle("UseV4", {Title = "Auto Use Race v4", Default = true })
 USERACEV3:OnChanged(function(value)
 	Enable_RaceV3 = value
 	task.spawn(function()
@@ -3409,17 +3379,33 @@ USERACEV3:OnChanged(function(value)
 		end
 	end)
 end)
-USERACEV4:OnChanged(function(value)
-	Enable_RaceV4 = value
-	task.spawn(function()
-		while Enable_RaceV4 do wait()
-			local OpenV4Race = inmyselfss("Awakening")
-			if OpenV4Race then
-				OpenV4Race.RemoteFunction:InvokeServer(true)
+local Toggle = Tabs.Main:AddToggle("Turn V4", {
+	Title = "Auto Use Race V4",
+	Default = true
+})
+Toggle:OnChanged(function(Value)
+	RaceNguLon = Value
+end)
+
+task.spawn(
+    function()
+	while task.wait() do
+		task.wait()
+		if RaceNguLon then
+			if
+                game.Players.LocalPlayer.Character:FindFirstChild("RaceEnergy") and
+                game.Players.LocalPlayer.Character.RaceEnergy.Value >= 1 and
+                not game.Players.LocalPlayer.Character.RaceTransformed.Value
+                then
+				local be = game:service("VirtualInputManager")
+				be:SendKeyEvent(true, "Y", false, game)
+				task.wait()
+				be:SendKeyEvent(false, "Y", false, game)
 			end
 		end
-	end)
-end)
+	end
+end
+)
     local Slider = Tabs.Settings:AddSlider("Slider", {
         Title = "MobHealth",
         Description = "",
@@ -3505,7 +3491,7 @@ local Slider = Tabs.Settings:AddSlider("Slider", {
     
     local Autolivi = Tabs.Main:AddToggle("Autolivi", {
     Title = "Auto Farm Level",
-    Description = "",
+    Description = "farm or happy get reset level",
     Default = _G.AutoFarm })
     Autolivi:OnChanged(function(Value)
     _G.AutoFarm = Value
@@ -3578,7 +3564,7 @@ end)
         end
     end)
     
-    
+    Tabs.cailon:AddSection("Mirage Fruit Dealer")
     local dealermirrafe = Tabs.cailon:AddToggle("dealermirrafe", {
     Title = "Teleport Advanced Fruit Dealer",
     Description = "teleport to npc seller fruit in Mirage islands faster ez",
@@ -9982,6 +9968,38 @@ spawn(function()
     end)
 end)
 
+Tabs.support:AddButton({
+        Title = "Server Discord",
+        Description = "click for copy link and join",
+        Callback = function()            
+        setclipboard("https://discord.gg/VHb3D7sfqd") 
+      end
+    })
+    Tabs.support:AddSection("Updated Logs") 
+    Tabs.support:AddParagraph({
+        Title = "Updated: Smart Tween",
+        Content = "experience you will know"
+    })
+    Tabs.support:AddParagraph({
+        Title = "Updated: Mode Farming",
+        Content = "mode farm faster better"
+    })
+    Tabs.support:AddSection("Fixed Logs") 
+    Tabs.support:AddParagraph({
+        Title = "Fixed: Cake Prince",
+        Content = "fixed are not attacking cake prince"
+    })
+    Tabs.support:AddParagraph({
+        Title = "Fixed: Fast Attack",
+        Content = "Fixed slow and not attack mob if AFK long time"
+    })
+    Tabs.support:AddParagraph({
+        Title = "Fixed: Lag Script",
+        Content = "Fixed drop fps laggy, now is smooth in future I will try to optimize"
+    })
+
+print("load xong r") 
+print("Developer: baobg contact Facebook: lộc zutaki or discord: baobg")
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 game.StarterGui:SetCore("SendNotification", {
 Title = "HappyCathub",
