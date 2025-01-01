@@ -1,35 +1,4 @@
 repeat
-	wait()
-until game.Players
-repeat
-	wait()
-until game.Players.LocalPlayer
-repeat
-	wait()
-until game.ReplicatedStorage
-repeat
-	wait()
-until game.ReplicatedStorage:FindFirstChild("Remotes");
-repeat
-	wait()
-until game.Players.LocalPlayer:FindFirstChild("PlayerGui");
-repeat
-	wait()
-until game.Players.LocalPlayer.PlayerGui:FindFirstChild("Main");
-repeat
-	wait()
-until game:GetService("Players")
-repeat
-	wait()
-until game:GetService("Players").LocalPlayer.Character:FindFirstChild("Energy")
-wait(0.5)
-if not game:IsLoaded() then
-	repeat
-		game.Loaded:Wait()
-	until game:IsLoaded()
-end
-
-repeat
     wait(10)
 until game:IsLoaded(10)
 if game.PlaceId == 2753915549 then
@@ -2852,24 +2821,8 @@ end)
         BypassTP = Value		
         saveSettings() 
     end)
-    print("bypass")
-    Toggle = Tabs.Settings:AddToggle("MyToggle", {Title = "Auto Haki", Default = true })
-    Toggle:OnChanged(function(Value)
-        _G.AUTOHAKI = Value
-        saveSettings()
-    end)
-    spawn(function()
-    while wait(.1) do
-        if _G.AUTOHAKI then 
-            if not game.Players.LocalPlayer.Character:FindFirstChild("HasBuso") then
-                local args = {
-                    [1] = "Buso"
-                }
-                game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer(unpack(args))
-            end
-        end
-    end
-end)
+    
+    
 Toggle = Tabs.Settings:AddToggle("MyToggle", {Title = "Auto Ken Haki", Default = _G.AUTOKen })
     Toggle:OnChanged(function(Value)
         _G.AUTOKen = Value
