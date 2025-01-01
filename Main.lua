@@ -1,4 +1,35 @@
 repeat
+	wait()
+until game.Players
+repeat
+	wait()
+until game.Players.LocalPlayer
+repeat
+	wait()
+until game.ReplicatedStorage
+repeat
+	wait()
+until game.ReplicatedStorage:FindFirstChild("Remotes");
+repeat
+	wait()
+until game.Players.LocalPlayer:FindFirstChild("PlayerGui");
+repeat
+	wait()
+until game.Players.LocalPlayer.PlayerGui:FindFirstChild("Main");
+repeat
+	wait()
+until game:GetService("Players")
+repeat
+	wait()
+until game:GetService("Players").LocalPlayer.Character:FindFirstChild("Energy")
+wait(0.5)
+if not game:IsLoaded() then
+	repeat
+		game.Loaded:Wait()
+	until game:IsLoaded()
+end
+
+repeat
     wait(10)
 until game:IsLoaded(10)
 if game.PlaceId == 2753915549 then
@@ -2773,39 +2804,6 @@ game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("BlackbeardRewa
         end
     })
 
-  Toggle = Tabs.Settings:AddToggle("MyToggle", {Title = "Hide Mobs", Description = "invisible monster for have better fps", Default = true })
-    Toggle:OnChanged(function(Value)
-        _G.hadesinvis = Value		
-        saveSettings() 
-    end)
-    spawn(function()
-    while wait() do
-        if _G.hadesinvis then
-            pcall(function()
-                for i, v in pairs(game:GetService("Workspace").Enemies:GetDescendants()) do
-                    if v.ClassName == "MeshPart" then
-                        v.Transparency = 1
-                    end
-                end
-                for i, v in pairs(game:GetService("Workspace").Enemies:GetDescendants()) do
-                    if v.Name == "Head" then
-                        v.Transparency = 1
-                    end
-                end
-                for i, v in pairs(game:GetService("Workspace").Enemies:GetDescendants()) do
-                    if v.ClassName == "Accessory" then
-                        v.Handle.Transparency = 1
-                    end
-                end
-                for i, v in pairs(game:GetService("Workspace").Enemies:GetDescendants()) do
-                    if v.ClassName == "Decal" then
-                        v.Transparency = 1
-                    end
-                end
-            end)
-        end
-    end
-end)
 
     local Dropdown = Tabs.Settings:AddDropdown("Dropdown", {
     Title = "Weapon",
